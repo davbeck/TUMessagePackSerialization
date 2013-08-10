@@ -19,6 +19,7 @@ typedef enum : UInt8 {
     
     // full codes
     TUMessagePackUInt8 = 0xcc,
+    TUMessagePackUInt64 = 0xcf,
 } TUMessagePackCode;
 
 
@@ -46,9 +47,15 @@ typedef enum : UInt8 {
             // the rest of the codes are all 8 bits
             switch (code) {
                 case TUMessagePackUInt8: {
-                    if (byteRange.length > position - byteRange.location) {
+                    if (byteRange.length >= position - byteRange.location + 8/8) {
                         UInt8 value = ((UInt8 *)bytes)[position - byteRange.location];
                         object = [NSNumber numberWithUnsignedChar:value];
+                    }
+                    break;
+                } case TUMessagePackUInt64: {
+                    if (byteRange.length >= position - byteRange.location + 64/8) {
+                        UInt64 value = ((UInt64 *)bytes)[position - byteRange.location];
+                        object = [NSNumber numberWithUnsignedLongLong:value];
                     }
                     break;
                 }
