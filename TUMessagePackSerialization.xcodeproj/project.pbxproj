@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		113481CE17B69F5C00BCFCD8 /* PositiveFixint.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 113481CD17B69F5C00BCFCD8 /* PositiveFixint.msgpack */; };
+		117581FE17B6AC810032442E /* UInt8.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FD17B6AC810032442E /* UInt8.msgpack */; };
 		11E7931217B68BF100C781B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7931117B68BF100C781B3 /* Foundation.framework */; };
 		11E7931717B68BF100C781B3 /* TUMessagePackSerialization.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11E7931617B68BF100C781B3 /* TUMessagePackSerialization.h */; };
 		11E7931917B68BF100C781B3 /* TUMessagePackSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 11E7931817B68BF100C781B3 /* TUMessagePackSerialization.m */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		113481CD17B69F5C00BCFCD8 /* PositiveFixint.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PositiveFixint.msgpack; sourceTree = "<group>"; };
+		117581FD17B6AC810032442E /* UInt8.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UInt8.msgpack; sourceTree = "<group>"; };
 		11E7930E17B68BF100C781B3 /* libTUMessagePackSerialization.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTUMessagePackSerialization.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E7931117B68BF100C781B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		11E7931517B68BF100C781B3 /* TUMessagePackSerialization-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUMessagePackSerialization-Prefix.pch"; sourceTree = "<group>"; };
@@ -141,8 +143,9 @@
 		11E7932817B68BF100C781B3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				11E7933717B6957900C781B3 /* NegativeFixint.msgpack */,
 				113481CD17B69F5C00BCFCD8 /* PositiveFixint.msgpack */,
+				11E7933717B6957900C781B3 /* NegativeFixint.msgpack */,
+				117581FD17B6AC810032442E /* UInt8.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -222,6 +225,7 @@
 				11E7933817B6957900C781B3 /* NegativeFixint.msgpack in Resources */,
 				113481CE17B69F5C00BCFCD8 /* PositiveFixint.msgpack in Resources */,
 				11E7932C17B68BF100C781B3 /* InfoPlist.strings in Resources */,
+				117581FE17B6AC810032442E /* UInt8.msgpack in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

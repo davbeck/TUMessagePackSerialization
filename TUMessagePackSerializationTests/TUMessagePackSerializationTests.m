@@ -51,4 +51,9 @@
     [self _testReadingWithType:@"NegativeFixint" expectedValue:@-28];
 }
 
+- (void)testUInt8Reading
+{
+    [self _testReadingWithType:@"UInt8" expectedValue:@250];
+}
+
 @end

@@ -13,8 +13,12 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 
 typedef enum : UInt8 {
+    // mixed codes
 	TUMessagePackPositiveFixint = 0x00, // unused... it's special
 	TUMessagePackNegativeFixint = 0xe0,
+    
+    // full codes
+    TUMessagePackUInt8 = 0xcc,
 } TUMessagePackCode;
 
 
@@ -27,15 +31,28 @@ typedef enum : UInt8 {
     __block id object = nil;
     
     
-    NSUInteger position = 0;
+    __block NSUInteger position = 0;
     
     [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
         UInt8 code = ((UInt8 *)bytes)[position - byteRange.location];
+        position++;
         
+        // first we check mixed codes (codes that mix code and value)
         if (!(code & 0b10000000)) {
             object = [NSNumber numberWithUnsignedChar:code];
-        } else if (code & TUMessagePackNegativeFixint) {
+        } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
             object = [NSNumber numberWithChar:code];
+        } else {
+            // the rest of the codes are all 8 bits
+            switch (code) {
+                case TUMessagePackUInt8: {
+                    if (byteRange.length > position - byteRange.location) {
+                        UInt8 value = ((UInt8 *)bytes)[position - byteRange.location];
+                        object = [NSNumber numberWithUnsignedChar:value];
+                    }
+                    break;
+                }
+            }
         }
     }];
     
