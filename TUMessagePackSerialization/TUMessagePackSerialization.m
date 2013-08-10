@@ -24,19 +24,35 @@ typedef enum : UInt8 {
 
 
 @implementation TUMessagePackSerialization
+{
+    NSUInteger _position;
+    
+    TUMessagePackCode _currentCode;
+    NSMutableData *_currentObjectData;
+}
 
 #pragma mark - Reading
 
 + (id)messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
+    TUMessagePackSerialization *serialization = [TUMessagePackSerialization new];
+    
+    return [serialization _messagePackObjectWithData:data options:opt error:error];
+}
+
+- (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
+{
     __block id object = nil;
-    
-    
-    __block NSUInteger position = 0;
+    _position = 0;
     
     [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
-        UInt8 code = ((UInt8 *)bytes)[position - byteRange.location];
-        position++;
+        if (_currentObjectData != nil) {
+            object = [self _readObjectWithCode:_currentCode bytes:bytes byteRange:byteRange options:opt error:error];
+        }
+        
+        
+        UInt8 code = ((UInt8 *)bytes)[_position - byteRange.location];
+        _position++;
         
         // first we check mixed codes (codes that mix code and value)
         if (!(code & 0b10000000)) {
@@ -44,22 +60,7 @@ typedef enum : UInt8 {
         } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
             object = [NSNumber numberWithChar:code];
         } else {
-            // the rest of the codes are all 8 bits
-            switch (code) {
-                case TUMessagePackUInt8: {
-                    if (byteRange.length >= position - byteRange.location + 8/8) {
-                        UInt8 value = ((UInt8 *)bytes)[position - byteRange.location];
-                        object = [NSNumber numberWithUnsignedChar:value];
-                    }
-                    break;
-                } case TUMessagePackUInt64: {
-                    if (byteRange.length >= position - byteRange.location + 64/8) {
-                        UInt64 value = ((UInt64 *)bytes)[position - byteRange.location];
-                        object = [NSNumber numberWithUnsignedLongLong:value];
-                    }
-                    break;
-                }
-            }
+            object = [self _readObjectWithCode:code bytes:bytes + _position - byteRange.location byteRange:NSMakeRange(_position, byteRange.length - _position + byteRange.location) options:opt error:error];
         }
     }];
     
@@ -68,6 +69,48 @@ typedef enum : UInt8 {
         *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
     }
     return object;
+}
+
+- (id)_readObjectWithCode:(TUMessagePackCode)code bytes:(const void *)bytes byteRange:(NSRange)byteRange options:(TUMessagePackReadingOptions)opt error:(NSError **)error
+{
+    NSMutableData *objectData;
+    if (_currentObjectData != nil) {
+        objectData = _currentObjectData;
+    } else {
+        objectData = [NSMutableData new];
+    }
+    
+    switch (code) {
+        case TUMessagePackUInt8: {
+            if (objectData.length + byteRange.length > _position - byteRange.location) {
+                [objectData appendBytes:bytes length:1 - objectData.length];
+                
+                UInt8 value = *((UInt8 *)[objectData bytes]);
+                return [NSNumber numberWithUnsignedChar:value];
+            } else {
+                [objectData appendBytes:bytes length:byteRange.length];
+                
+                _currentCode = TUMessagePackUInt8;
+                _currentObjectData = [NSMutableData new];
+            }
+            break;
+        } case TUMessagePackUInt64: {
+            if (objectData.length + byteRange.length > _position - byteRange.location) {
+                [objectData appendBytes:bytes length:8 - objectData.length];
+                
+                UInt64 value = *((UInt64 *)[objectData bytes]);
+                return [NSNumber numberWithLongLong:value];
+            } else {
+                [objectData appendBytes:bytes length:byteRange.length];
+                
+                _currentCode = TUMessagePackUInt8;
+                _currentObjectData = [NSMutableData new];
+            }
+            break;
+        }
+    }
+    
+    return nil;
 }
 
 
