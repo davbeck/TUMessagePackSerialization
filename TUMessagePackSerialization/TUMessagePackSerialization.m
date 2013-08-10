@@ -13,7 +13,8 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 
 typedef enum : UInt8 {
-	TUMessagePackPositiveFixint = 0x00,
+	TUMessagePackPositiveFixint = 0x00, // unused... it's special
+	TUMessagePackNegativeFixint = 0xe0,
 } TUMessagePackCode;
 
 
@@ -31,8 +32,10 @@ typedef enum : UInt8 {
     [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
         UInt8 code = ((UInt8 *)bytes)[position - byteRange.location];
         
-        if ((code & TUMessagePackPositiveFixint) == TUMessagePackPositiveFixint) {
+        if (!(code & 0b10000000)) {
             object = [NSNumber numberWithUnsignedChar:code];
+        } else if (code & TUMessagePackNegativeFixint) {
+            object = [NSNumber numberWithChar:code];
         }
     }];
     

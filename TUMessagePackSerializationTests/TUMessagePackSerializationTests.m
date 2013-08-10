@@ -29,7 +29,7 @@
     [super tearDown];
 }
 
-- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue expectedType:(const char *)expectedType
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
     
@@ -38,12 +38,17 @@
     
     XCTAssertNotNil(result, @"Error reading %@: %@", testType, error);
     
-    XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect", testType);
+    XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect (%@)", testType, result);
 }
 
 - (void)testPositiveFixintReading
 {
-    [self _testReadingWithType:@"PositiveFixint" expectedValue:@42 expectedType:@encode(unsigned char)];
+    [self _testReadingWithType:@"PositiveFixint" expectedValue:@42];
+}
+
+- (void)testNegativeFixintReading
+{
+    [self _testReadingWithType:@"NegativeFixint" expectedValue:@-28];
 }
 
 @end
