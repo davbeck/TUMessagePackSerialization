@@ -33,35 +33,34 @@ typedef enum : UInt8 {
     
     
     __block NSUInteger position = 0;
+    const void *bytes = data.bytes;
     
-    [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
-        UInt8 code = ((UInt8 *)bytes)[position - byteRange.location];
-        position++;
-        
-        // first we check mixed codes (codes that mix code and value)
-        if (!(code & 0b10000000)) {
-            object = [NSNumber numberWithUnsignedChar:code];
-        } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
-            object = [NSNumber numberWithChar:code];
-        } else {
-            // the rest of the codes are all 8 bits
-            switch (code) {
-                case TUMessagePackUInt8: {
-                    if (byteRange.length >= position - byteRange.location + 8/8) {
-                        UInt8 value = ((UInt8 *)bytes)[position - byteRange.location];
-                        object = [NSNumber numberWithUnsignedChar:value];
-                    }
-                    break;
-                } case TUMessagePackUInt64: {
-                    if (byteRange.length >= position - byteRange.location + 64/8) {
-                        UInt64 value = ((UInt64 *)bytes)[position - byteRange.location];
-                        object = [NSNumber numberWithUnsignedLongLong:value];
-                    }
-                    break;
+    UInt8 code = ((UInt8 *)bytes)[position];
+    position++;
+    
+    // first we check mixed codes (codes that mix code and value)
+    if (!(code & 0b10000000)) {
+        object = [NSNumber numberWithUnsignedChar:code];
+    } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
+        object = [NSNumber numberWithChar:code];
+    } else {
+        // the rest of the codes are all 8 bits
+        switch (code) {
+            case TUMessagePackUInt8: {
+                if (data.length >= position + 8/8) {
+                    UInt8 value = ((UInt8 *)bytes)[position];
+                    object = [NSNumber numberWithUnsignedChar:value];
                 }
+                break;
+            } case TUMessagePackUInt64: {
+                if (data.length >= position + 64/8) {
+                    UInt64 value = ((UInt64 *)bytes)[position];
+                    object = [NSNumber numberWithUnsignedLongLong:value];
+                }
+                break;
             }
         }
-    }];
+    }
     
     
     if (object == nil && error != NULL) {
