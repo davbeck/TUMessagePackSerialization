@@ -16,6 +16,7 @@
 		11E7932617B68BF100C781B3 /* libTUMessagePackSerialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7930E17B68BF100C781B3 /* libTUMessagePackSerialization.a */; };
 		11E7932C17B68BF100C781B3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11E7932A17B68BF100C781B3 /* InfoPlist.strings */; };
 		11E7932E17B68BF100C781B3 /* TUMessagePackSerializationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */; };
+		11E7933817B6957900C781B3 /* PositiveFixint.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11E7933717B6957900C781B3 /* PositiveFixint.msgpack */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TUMessagePackSerializationTests-Info.plist"; sourceTree = "<group>"; };
 		11E7932B17B68BF100C781B3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackSerializationTests.m; sourceTree = "<group>"; };
+		11E7933717B6957900C781B3 /* PositiveFixint.msgpack */ = {isa = PBXFileReference; lastKnownFileType = text; path = PositiveFixint.msgpack; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		11E7932817B68BF100C781B3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				11E7933717B6957900C781B3 /* PositiveFixint.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -213,6 +216,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11E7933817B6957900C781B3 /* PositiveFixint.msgpack in Resources */,
 				11E7932C17B68BF100C781B3 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

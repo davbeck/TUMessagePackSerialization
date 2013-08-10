@@ -8,6 +8,9 @@
 
 #import <XCTest/XCTest.h>
 
+#import "TUMessagePackSerialization.h"
+
+
 @interface TUMessagePackSerializationTests : XCTestCase
 
 @end
@@ -26,9 +29,21 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue expectedType:(const char *)expectedType
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
+    
+    NSError *error = nil;
+    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments error:&error];
+    
+    XCTAssertNotNil(result, @"Error reading %@: %@", testType, error);
+    
+    XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect", testType);
+}
+
+- (void)testPositiveFixintReading
+{
+    [self _testReadingWithType:@"PositiveFixint" expectedValue:@42 expectedType:@encode(unsigned char)];
 }
 
 @end
