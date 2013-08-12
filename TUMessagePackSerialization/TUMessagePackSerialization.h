@@ -15,6 +15,10 @@ typedef enum : NSUInteger {
 	TUMessagePackReadingAllowFragments = (1UL << 2),
 	TUMessagePackReadingStringsAsData = (1UL << 3),
 	TUMessagePackReadingNSNullAsNil = (1UL << 4),
+    
+    // proposed
+    // TUMessagePackReadingLenient
+    // If we run out of data for an array or dictionary, return as much valid data as possible
 } TUMessagePackReadingOptions;
 
 typedef enum : NSUInteger {

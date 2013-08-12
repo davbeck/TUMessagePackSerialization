@@ -233,17 +233,19 @@ typedef enum : uint8_t {
 {
     id __unsafe_unretained *objects = (id __unsafe_unretained *)alloca(sizeof(id) * length);
     
+    NSUInteger count = 0;
     for (NSUInteger index = 0; index < length; index++) {
         __attribute__((objc_precise_lifetime)) id object = [self _popObject];
         
         if (object != nil) {
             objects[index] = object;
-        } else {
+            count++;
+        } else if (_error != nil) {
             return nil;
         }
     }
     
-    return [[NSArray alloc] initWithObjects:objects count:length];
+    return [[NSArray alloc] initWithObjects:objects count:count];
 }
 
 - (NSData *)_popData:(NSUInteger)length
