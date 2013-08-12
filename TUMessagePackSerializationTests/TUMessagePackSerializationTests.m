@@ -41,6 +41,9 @@
     XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect (%@)", testType, result);
 }
 
+
+#pragma mark - Fixint
+
 - (void)testPositiveFixintReading
 {
     [self _testReadingWithType:@"PositiveFixint" expectedValue:@42];
@@ -50,6 +53,9 @@
 {
     [self _testReadingWithType:@"NegativeFixint" expectedValue:@-28];
 }
+
+
+#pragma mark - UInt
 
 - (void)testUInt8Reading
 {
@@ -70,6 +76,9 @@
 {
     [self _testReadingWithType:@"UInt64" expectedValue:@6223172016852725913];
 }
+
+
+#pragma mark - Int
 
 - (void)testInt8Reading
 {
