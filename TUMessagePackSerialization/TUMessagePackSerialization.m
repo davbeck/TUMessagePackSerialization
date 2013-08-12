@@ -23,7 +23,7 @@ typedef enum : uint8_t {
 } TUMessagePackCode;
 
 
-#define TUPopVar(type) *(type *)[_data subdataWithRange:NSMakeRange(_position, sizeof(type))].bytes; _position += sizeof(type);
+#define TUPopVar(type) *(type *)[self _popData:sizeof(type)].bytes
 
 
 @implementation TUMessagePackSerialization
@@ -61,17 +61,10 @@ typedef enum : uint8_t {
         // the rest of the codes are all 8 bits
         switch (code) {
             case TUMessagePackUInt8: {
-                if (_data.length >= _position + 8/8) {
-                    uint8_t value = TUPopVar(uint8_t);
-                    object = [NSNumber numberWithUnsignedChar:value];
-                }
+                object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
                 break;
             } case TUMessagePackUInt64: {
-                if (_data.length >= _position + 64/8) {
-                    uint64_t value = TUPopVar(uint64_t);
-                    value = CFSwapInt64BigToHost(value);
-                    object = [NSNumber numberWithUnsignedLongLong:value];
-                }
+                object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
                 break;
             }
         }
@@ -82,6 +75,18 @@ typedef enum : uint8_t {
         *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
     }
     return object;
+}
+
+- (NSData *)_popData:(NSUInteger)length
+{
+    if (_data.length >= _position + length) {
+        NSData *data = [_data subdataWithRange:NSMakeRange(_position, length)];
+        _position += length;
+        
+        return data;
+    }
+    
+    return nil;
 }
 
 
