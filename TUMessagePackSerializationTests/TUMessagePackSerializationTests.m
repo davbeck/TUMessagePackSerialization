@@ -156,4 +156,26 @@
     }];
 }
 
+
+#pragma mark - Strings
+
+- (void)testFixstr
+{
+    [self _testReadingWithType:@"Fixstr" expectedValue:@"test"];
+}
+
+// Str8 reading test will go here when we can create the test file some how
+
+- (void)testStr16
+{
+    [self _testReadingWithType:@"Str16" expectedValue:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus aliquet augue a scelerisque. Ut viverra velit nisl, sit amet convallis arcu iaculis id. Curabitur semper, nibh ut ornare hendrerit, orci massa facilisis velit, eget tincidunt enim velit non tellus. Class aptent taciti sociosqu ad litora torquent metus."];
+}
+
+- (void)testStr32
+{
+    NSString *testString = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"] encoding:NSUTF8StringEncoding error:NULL];
+    
+    [self _testReadingWithType:@"Str32" expectedValue:testString];
+}
+
 @end
