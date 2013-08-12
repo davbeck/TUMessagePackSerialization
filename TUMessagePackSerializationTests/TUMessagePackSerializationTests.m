@@ -183,11 +183,27 @@
     [self _testReadingWithType:@"Str32" expectedValue:testString];
 }
 
+- (void)testMutableLeaves
+{
+    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:^(id result) {
+        XCTAssertTrue([result isKindOfClass:[NSMutableString class]], @"Returned string is not mutable when passing TUMessagePackReadingMutableLeaves.");
+    } options:TUMessagePackReadingMutableLeaves];
+}
+
 - (void)testStringAsData
 {
     NSData *testString = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"]];
     
     [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:nil options:TUMessagePackReadingStringsAsData];
+}
+
+- (void)testMutableLeavesAsData
+{
+    NSData *testString = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"]];
+    
+    [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:^(id result) {
+        XCTAssertTrue([result isKindOfClass:[NSMutableData class]], @"Returned data is not mutable when passing TUMessagePackReadingMutableLeaves.");
+    } options:TUMessagePackReadingStringsAsData | TUMessagePackReadingMutableLeaves];
 }
 
 @end

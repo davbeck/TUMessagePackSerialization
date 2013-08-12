@@ -133,49 +133,40 @@ typedef enum : uint8_t {
             
         case TUMessagePackStr8: {
             uint8_t length = TUPopVar(uint8_t);
-            NSData *stringData = [self _popData:length];
-            
-            if (opt & TUMessagePackReadingStringsAsData) {
-                object = stringData;
-            } else {
-                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
-            }
+            object = [self _popString:length options:opt];
             break;
         } case TUMessagePackStr16: {
             uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
-            NSData *stringData = [self _popData:length];
-            
-            if (opt & TUMessagePackReadingStringsAsData) {
-                object = stringData;
-            } else {
-                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
-            }
+            object = [self _popString:length options:opt];
             break;
         } case TUMessagePackStr32: {
             uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
-            NSData *stringData = [self _popData:length];
-            
-            if (opt & TUMessagePackReadingStringsAsData) {
-                object = stringData;
-            } else {
-                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
-            }
+            object = [self _popString:length options:opt];
             break;
         }
             
         case TUMessagePackBin8: {
             uint8_t length = TUPopVar(uint8_t);
             object = [self _popData:length];
+            if (opt & TUMessagePackReadingMutableLeaves) {
+                object = [object mutableCopy];
+            }
             
             break;
         } case TUMessagePackBin16: {
             uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
             object = [self _popData:length];
+            if (opt & TUMessagePackReadingMutableLeaves) {
+                object = [object mutableCopy];
+            }
             
             break;
         } case TUMessagePackBin32: {
             uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
             object = [self _popData:length];
+            if (opt & TUMessagePackReadingMutableLeaves) {
+                object = [object mutableCopy];
+            }
             
             break;
         }
@@ -187,9 +178,7 @@ typedef enum : uint8_t {
                 object = [NSNumber numberWithChar:code];
             } else if ((code & 0b11100000) == TUMessagePackFixstr) {
                 uint8_t length = code & ~0b11100000;
-                NSData *stringData = [self _popData:length];
-                
-                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+                object = [self _popString:length options:opt];
             }
             
             break;
@@ -201,6 +190,25 @@ typedef enum : uint8_t {
         *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
     }
     return object;
+}
+
+- (id)_popString:(NSUInteger)length options:(TUMessagePackReadingOptions)opt
+{
+    NSData *stringData = [self _popData:length];
+    
+    if (opt & TUMessagePackReadingStringsAsData) {
+        if (opt & TUMessagePackReadingMutableLeaves) {
+            return [stringData mutableCopy];
+        } else {
+            return stringData;
+        }
+    } else {
+        if (opt & TUMessagePackReadingMutableLeaves) {
+            return [[NSMutableString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+        } else {
+            return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+        }
+    }
 }
 
 - (NSData *)_popData:(NSUInteger)length
