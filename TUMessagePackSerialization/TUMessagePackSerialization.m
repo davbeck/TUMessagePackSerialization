@@ -40,6 +40,10 @@ typedef enum : uint8_t {
     TUMessagePackStr8 = 0xD9 ,
     TUMessagePackStr16 = 0xDA,
     TUMessagePackStr32 = 0xDB,
+    
+    TUMessagePackBin8 = 0xC4,
+    TUMessagePackBin16 = 0xC5,
+    TUMessagePackBin32 = 0xC6,
 } TUMessagePackCode;
 
 
@@ -144,6 +148,23 @@ typedef enum : uint8_t {
             NSData *stringData = [self _popData:length];
             
             object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            break;
+        }
+            
+        case TUMessagePackBin8: {
+            uint8_t length = TUPopVar(uint8_t);
+            object = [self _popData:length];
+            
+            break;
+        } case TUMessagePackBin16: {
+            uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+            object = [self _popData:length];
+            
+            break;
+        } case TUMessagePackBin32: {
+            uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+            object = [self _popData:length];
+            
             break;
         }
             
