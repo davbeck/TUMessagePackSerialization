@@ -56,6 +56,11 @@
     [self _testReadingWithType:@"UInt8" expectedValue:@250];
 }
 
+- (void)testUInt16Reading
+{
+    [self _testReadingWithType:@"UInt16" expectedValue:@48516];
+}
+
 - (void)testUInt64Reading
 {
     [self _testReadingWithType:@"UInt64" expectedValue:@6223172016852725913];

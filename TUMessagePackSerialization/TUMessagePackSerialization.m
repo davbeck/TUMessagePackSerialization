@@ -15,11 +15,12 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 typedef enum : uint8_t {
     // mixed codes
 	TUMessagePackPositiveFixint = 0x00, // unused... it's special
-	TUMessagePackNegativeFixint = 0xe0,
+	TUMessagePackNegativeFixint = 0xE0,
     
     // full codes
-    TUMessagePackUInt8 = 0xcc,
-    TUMessagePackUInt64 = 0xcf,
+    TUMessagePackUInt8 = 0xCC,
+    TUMessagePackUInt16 = 0xCD,
+    TUMessagePackUInt64 = 0xCF,
 } TUMessagePackCode;
 
 
@@ -62,6 +63,9 @@ typedef enum : uint8_t {
         switch (code) {
             case TUMessagePackUInt8: {
                 object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
+                break;
+            } case TUMessagePackUInt16: {
+                object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
                 break;
             } case TUMessagePackUInt64: {
                 object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
