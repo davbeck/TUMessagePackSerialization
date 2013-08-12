@@ -49,6 +49,13 @@ typedef enum : uint8_t {
 } TUMessagePackCode;
 
 
+#define TUCheckDataForVar(type) do { \
+    if (_data.length < _position + sizeof(type)) { \
+        _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNotEnoughData userInfo:nil]; \
+        return nil; \
+    } \
+} while (0)
+
 #define TUPopVar(type) *(type *)[self _popData:sizeof(type)].bytes
 
 
@@ -88,41 +95,52 @@ typedef enum : uint8_t {
 {
     id object = nil;
     
+    TUCheckDataForVar(uint8_t);
     TUMessagePackCode code = TUPopVar(uint8_t);
     
     switch (code) {
             case TUMessagePackUInt8: {
+                TUCheckDataForVar(uint8_t);
                 object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
                 break;
             } case TUMessagePackUInt16: {
+                TUCheckDataForVar(uint16_t);
                 object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
                 break;
             } case TUMessagePackUInt32: {
+                TUCheckDataForVar(uint32_t);
                 object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
                 break;
             } case TUMessagePackUInt64: {
+                TUCheckDataForVar(uint64_t);
                 object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
                 break;
             }
             
             case TUMessagePackInt8: {
+                TUCheckDataForVar(int8_t);
                 object = [NSNumber numberWithChar:TUPopVar(int8_t)];
                 break;
             } case TUMessagePackInt16: {
+                TUCheckDataForVar(int16_t);
                 object = [NSNumber numberWithShort:CFSwapInt16BigToHost(TUPopVar(int16_t))];
                 break;
             } case TUMessagePackInt32: {
+                TUCheckDataForVar(int32_t);
                 object = [NSNumber numberWithLong:CFSwapInt32BigToHost(TUPopVar(int32_t))];
                 break;
             } case TUMessagePackInt64: {
+                TUCheckDataForVar(int64_t);
                 object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(TUPopVar(int64_t))];
                 break;
             }
             
             case TUMessagePackFloat: {
+                TUCheckDataForVar(CFSwappedFloat32);
                 object = [NSNumber numberWithFloat:CFConvertFloatSwappedToHost(TUPopVar(CFSwappedFloat32))];
                 break;
             } case TUMessagePackDouble: {
+                TUCheckDataForVar(CFSwappedFloat64);
                 object = [NSNumber numberWithDouble:CFConvertDoubleSwappedToHost(TUPopVar(CFSwappedFloat64))];
                 break;
             }
@@ -146,20 +164,28 @@ typedef enum : uint8_t {
             }
             
             case TUMessagePackStr8: {
+                TUCheckDataForVar(uint8_t);
+                
                 uint8_t length = TUPopVar(uint8_t);
                 object = [self _popString:length];
                 break;
             } case TUMessagePackStr16: {
+                TUCheckDataForVar(uint16_t);
+                
                 uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
                 object = [self _popString:length];
                 break;
             } case TUMessagePackStr32: {
+                TUCheckDataForVar(uint32_t);
+                
                 uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
                 object = [self _popString:length];
                 break;
             }
             
             case TUMessagePackBin8: {
+                TUCheckDataForVar(uint8_t);
+                
                 uint8_t length = TUPopVar(uint8_t);
                 object = [self _popData:length];
                 if (_options & TUMessagePackReadingMutableLeaves) {
@@ -168,6 +194,8 @@ typedef enum : uint8_t {
                 
                 break;
             } case TUMessagePackBin16: {
+                TUCheckDataForVar(uint16_t);
+                
                 uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
                 object = [self _popData:length];
                 if (_options & TUMessagePackReadingMutableLeaves) {
@@ -176,6 +204,8 @@ typedef enum : uint8_t {
                 
                 break;
             } case TUMessagePackBin32: {
+                TUCheckDataForVar(uint32_t);
+                
                 uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
                 object = [self _popData:length];
                 if (_options & TUMessagePackReadingMutableLeaves) {

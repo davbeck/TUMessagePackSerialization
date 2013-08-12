@@ -29,6 +29,7 @@ typedef enum : NSUInteger {
 extern NSString *TUMessagePackErrorDomain;
 typedef enum : NSInteger {
 	TUMessagePackNoMatchingFormatCode,
+    TUMessagePackNotEnoughData,
 } TUMessagePackErrorCode;
 
 
