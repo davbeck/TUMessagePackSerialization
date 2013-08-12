@@ -71,4 +71,24 @@
     [self _testReadingWithType:@"UInt64" expectedValue:@6223172016852725913];
 }
 
+- (void)testInt8Reading
+{
+    [self _testReadingWithType:@"Int8" expectedValue:@-100];
+}
+
+- (void)testInt16Reading
+{
+    [self _testReadingWithType:@"Int16" expectedValue:@-200];
+}
+
+- (void)testInt32Reading
+{
+    [self _testReadingWithType:@"Int32" expectedValue:@-1299962209];
+}
+
+- (void)testInt64Reading
+{
+    [self _testReadingWithType:@"Int64" expectedValue:@-6223172016852725913];
+}
+
 @end
