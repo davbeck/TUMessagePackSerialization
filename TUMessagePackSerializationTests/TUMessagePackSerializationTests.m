@@ -216,7 +216,27 @@
 
 - (void)testFixarray
 {
-    [self _testReadingWithType:@"Fixarray" expectedValue:@[@1, @"b", @3.0]];
+    [self _testReadingWithType:@"Fixarray" expectedValue:@[@1, @"b", @3.5]];
+}
+
+- (void)testArray16
+{
+    NSMutableArray *testArray = [[NSMutableArray alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 200; i++) {
+        [testArray addObject:@(i)];
+    }
+    
+    [self _testReadingWithType:@"Array16" expectedValue:testArray];
+}
+
+- (void)testArray32
+{
+    NSMutableArray *testArray = [[NSMutableArray alloc] initWithCapacity:82590];
+    for (NSUInteger i = 1; i <= 82590; i++) {
+        [testArray addObject:@(i)];
+    }
+    
+    [self _testReadingWithType:@"Array32" expectedValue:testArray];
 }
 
 

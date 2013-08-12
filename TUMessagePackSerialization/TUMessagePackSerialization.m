@@ -46,6 +46,8 @@ typedef enum : uint8_t {
     TUMessagePackBin32 = 0xC6,
     
     TUMessagePackFixarray = 0x90,
+    TUMessagePackArray16 = 0xDC,
+    TUMessagePackArray32 = 0xDD,
 } TUMessagePackCode;
 
 
@@ -211,6 +213,22 @@ typedef enum : uint8_t {
                 if (_options & TUMessagePackReadingMutableLeaves) {
                     object = [object mutableCopy];
                 }
+                
+                break;
+            }
+            
+            case TUMessagePackArray16: {
+                TUCheckDataForVar(uint16_t);
+                uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+                
+                object = [self _popArray:length];
+                
+                break;
+            } case TUMessagePackArray32: {
+                TUCheckDataForVar(uint32_t);
+                uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+                
+                object = [self _popArray:length];
                 
                 break;
             }

@@ -26,6 +26,8 @@
 		117581FE17B6AC810032442E /* UInt8.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FD17B6AC810032442E /* UInt8.msgpack */; };
 		1175820017B6B4F40032442E /* Int64.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FF17B6B4F40032442E /* Int64.msgpack */; };
 		11925ADB17B92F8000F49ED4 /* Fixarray.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */; };
+		11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADC17B93B0600F49ED4 /* Array16.msgpack */; };
+		11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADD17B93B0600F49ED4 /* Array32.msgpack */; };
 		11E7931217B68BF100C781B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7931117B68BF100C781B3 /* Foundation.framework */; };
 		11E7931717B68BF100C781B3 /* TUMessagePackSerialization.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11E7931617B68BF100C781B3 /* TUMessagePackSerialization.h */; };
 		11E7931917B68BF100C781B3 /* TUMessagePackSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 11E7931817B68BF100C781B3 /* TUMessagePackSerialization.m */; };
@@ -81,6 +83,8 @@
 		117581FD17B6AC810032442E /* UInt8.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UInt8.msgpack; sourceTree = "<group>"; };
 		117581FF17B6B4F40032442E /* Int64.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Int64.msgpack; sourceTree = "<group>"; };
 		11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixarray.msgpack; sourceTree = "<group>"; };
+		11925ADC17B93B0600F49ED4 /* Array16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array16.msgpack; sourceTree = "<group>"; };
+		11925ADD17B93B0600F49ED4 /* Array32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array32.msgpack; sourceTree = "<group>"; };
 		11E7930E17B68BF100C781B3 /* libTUMessagePackSerialization.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTUMessagePackSerialization.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E7931117B68BF100C781B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		11E7931517B68BF100C781B3 /* TUMessagePackSerialization-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TUMessagePackSerialization-Prefix.pch"; sourceTree = "<group>"; };
@@ -197,6 +201,8 @@
 				114CBBDC17B8806C00D4D629 /* Str32.txt */,
 				114CBBDE17B9283D00D4D629 /* Bin16.ico */,
 				11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */,
+				11925ADC17B93B0600F49ED4 /* Array16.msgpack */,
+				11925ADD17B93B0600F49ED4 /* Array32.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -282,10 +288,12 @@
 				11E7933817B6957900C781B3 /* NegativeFixint.msgpack in Resources */,
 				114CBBCA17B86F5000D4D629 /* Int16.msgpack in Resources */,
 				114CBBC917B86F5000D4D629 /* Int8.msgpack in Resources */,
+				11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */,
 				114CBBDB17B87FC800D4D629 /* Str32.msgpack in Resources */,
 				113481CE17B69F5C00BCFCD8 /* PositiveFixint.msgpack in Resources */,
 				11E7932C17B68BF100C781B3 /* InfoPlist.strings in Resources */,
 				114CBBDA17B87FC800D4D629 /* Str16.msgpack in Resources */,
+				11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */,
 				114CBBCB17B86F5000D4D629 /* Int32.msgpack in Resources */,
 				114CBBDF17B9283D00D4D629 /* Bin16.ico in Resources */,
 				114CBBDD17B8806C00D4D629 /* Str32.txt in Resources */,
