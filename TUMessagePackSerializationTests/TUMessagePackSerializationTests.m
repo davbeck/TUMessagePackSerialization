@@ -29,7 +29,7 @@
     [super tearDown];
 }
 
-- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue additionalTests:(void(^)(id result))additionalTests
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
     
@@ -38,7 +38,16 @@
     
     XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
-    XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect (%@)", testType, result);
+    XCTAssertEqualObjects(result, expectedValue, @"%@ value incorrect (%@)", testType, result);
+    
+    if (additionalTests != nil) {
+        additionalTests(result);
+    }
+}
+
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue
+{
+    [self _testReadingWithType:testType expectedValue:expectedValue additionalTests:nil];
 }
 
 
@@ -118,6 +127,23 @@
     XCTAssertNil(error, @"Error reading Nil with nil option: %@", error);
     
     XCTAssertTrue(result == nil, @"Nil value incorrect (%@)", result);
+}
+
+
+#pragma mark - Bool
+
+- (void)testTrueReading
+{
+    [self _testReadingWithType:@"True" expectedValue:@YES additionalTests:^(id result) {
+        XCTAssertEqual((id)kCFBooleanTrue, result, @"True does not equeal kCFBooleanTrue constant");
+    }];
+}
+
+- (void)testFalseReading
+{
+    [self _testReadingWithType:@"False" expectedValue:@NO additionalTests:^(id result) {
+        XCTAssertEqual((id)kCFBooleanFalse, result, @"True does not equeal kCFBooleanFalse constant");
+    }];
 }
 
 @end

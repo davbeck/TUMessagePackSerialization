@@ -29,6 +29,9 @@ typedef enum : uint8_t {
     TUMessagePackInt64 = 0xD3,
     
     TUMessagePackNil = 0xC0,
+    
+    TUMessagePackTrue = 0xC3,
+    TUMessagePackFalse = 0xC2,
 } TUMessagePackCode;
 
 
@@ -97,6 +100,14 @@ typedef enum : uint8_t {
             } else {
                 object = [NSNull null];
             }
+            break;
+        }
+            
+        case TUMessagePackTrue: {
+            object = (id)kCFBooleanTrue;
+            break;
+        } case TUMessagePackFalse: {
+            object = (id)kCFBooleanFalse;
             break;
         }
             
