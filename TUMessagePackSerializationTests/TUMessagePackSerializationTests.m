@@ -110,6 +110,16 @@
 }
 
 
+#pragma mark - Floating point
+
+// float reading test will go here when we can create the test file some how
+
+- (void)testDoubleReading
+{
+    [self _testReadingWithType:@"Double" expectedValue:@5672562398523.6523];
+}
+
+
 #pragma mark - Nil
 
 - (void)testNilReading
