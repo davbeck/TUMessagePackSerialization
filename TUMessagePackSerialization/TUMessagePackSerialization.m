@@ -12,7 +12,7 @@
 NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 
-typedef enum : UInt8 {
+typedef enum : uint8_t {
     // mixed codes
 	TUMessagePackPositiveFixint = 0x00, // unused... it's special
 	TUMessagePackNegativeFixint = 0xe0,
@@ -23,20 +23,34 @@ typedef enum : UInt8 {
 } TUMessagePackCode;
 
 
+#define TUPopVar(type) *(type *)[_data subdataWithRange:NSMakeRange(_position, sizeof(type))].bytes; _position += sizeof(type);
+
+
 @implementation TUMessagePackSerialization
+{
+    NSUInteger _position;
+    NSData *_data;
+}
 
 #pragma mark - Reading
 
 + (id)messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
+    TUMessagePackSerialization *serialization = [[TUMessagePackSerialization alloc] init];
+    
+    return [serialization _messagePackObjectWithData:data options:opt error:error];
+}
+
+- (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
+{
     __block id object = nil;
     
     
-    __block NSUInteger position = 0;
-    const void *bytes = data.bytes;
+    _data = data;
+    _position = 0;
     
-    UInt8 code = ((UInt8 *)bytes)[position];
-    position++;
+    
+    TUMessagePackCode code = TUPopVar(uint8_t);
     
     // first we check mixed codes (codes that mix code and value)
     if (!(code & 0b10000000)) {
@@ -47,14 +61,15 @@ typedef enum : UInt8 {
         // the rest of the codes are all 8 bits
         switch (code) {
             case TUMessagePackUInt8: {
-                if (data.length >= position + 8/8) {
-                    UInt8 value = ((UInt8 *)bytes)[position];
+                if (_data.length >= _position + 8/8) {
+                    uint8_t value = TUPopVar(uint8_t);
                     object = [NSNumber numberWithUnsignedChar:value];
                 }
                 break;
             } case TUMessagePackUInt64: {
-                if (data.length >= position + 64/8) {
-                    UInt64 value = ((UInt64 *)bytes)[position];
+                if (_data.length >= _position + 64/8) {
+                    uint64_t value = TUPopVar(uint64_t);
+                    value = CFSwapInt64BigToHost(value);
                     object = [NSNumber numberWithUnsignedLongLong:value];
                 }
                 break;
