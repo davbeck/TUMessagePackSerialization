@@ -20,6 +20,7 @@ typedef enum : uint8_t {
     // full codes
     TUMessagePackUInt8 = 0xCC,
     TUMessagePackUInt16 = 0xCD,
+    TUMessagePackUInt32 = 0xCE,
     TUMessagePackUInt64 = 0xCF,
 } TUMessagePackCode;
 
@@ -66,6 +67,9 @@ typedef enum : uint8_t {
                 break;
             } case TUMessagePackUInt16: {
                 object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
+                break;
+            } case TUMessagePackUInt32: {
+                object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
                 break;
             } case TUMessagePackUInt64: {
                 object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
