@@ -206,4 +206,18 @@
     } options:TUMessagePackReadingStringsAsData | TUMessagePackReadingMutableLeaves];
 }
 
+
+#pragma mark - Bin
+
+// Bin8|16|32 reading test will go here when we can create the test file some how
+
+
+#pragma mark - Array
+
+- (void)testFixarray
+{
+    [self _testReadingWithType:@"Fixarray" expectedValue:@[@1, @"b", @3.0]];
+}
+
+
 @end

@@ -44,6 +44,8 @@ typedef enum : uint8_t {
     TUMessagePackBin8 = 0xC4,
     TUMessagePackBin16 = 0xC5,
     TUMessagePackBin32 = 0xC6,
+    
+    TUMessagePackFixarray = 0x90,
 } TUMessagePackCode;
 
 
@@ -54,6 +56,8 @@ typedef enum : uint8_t {
 {
     NSUInteger _position;
     NSData *_data;
+    TUMessagePackReadingOptions _options;
+    NSError *_error;
 }
 
 #pragma mark - Reading
@@ -67,109 +71,119 @@ typedef enum : uint8_t {
 
 - (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
-    __block id object = nil;
-    
-    
+    _options = opt;
     _data = data;
     _position = 0;
     
+    id object = [self _popObject];
+    
+    if (_error != nil && error != NULL) {
+        *error = _error;
+    }
+    
+    return object;
+}
+
+- (id)_popObject
+{
+    id object = nil;
     
     TUMessagePackCode code = TUPopVar(uint8_t);
     
     switch (code) {
-        case TUMessagePackUInt8: {
-            object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
-            break;
-        } case TUMessagePackUInt16: {
-            object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
-            break;
-        } case TUMessagePackUInt32: {
-            object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
-            break;
-        } case TUMessagePackUInt64: {
-            object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
-            break;
-        }
-            
-        case TUMessagePackInt8: {
-            object = [NSNumber numberWithChar:TUPopVar(int8_t)];
-            break;
-        } case TUMessagePackInt16: {
-            object = [NSNumber numberWithShort:CFSwapInt16BigToHost(TUPopVar(int16_t))];
-            break;
-        } case TUMessagePackInt32: {
-            object = [NSNumber numberWithLong:CFSwapInt32BigToHost(TUPopVar(int32_t))];
-            break;
-        } case TUMessagePackInt64: {
-            object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(TUPopVar(int64_t))];
-            break;
-        }
-        
-        case TUMessagePackFloat: {
-            object = [NSNumber numberWithFloat:CFConvertFloatSwappedToHost(TUPopVar(CFSwappedFloat32))];
-            break;
-        } case TUMessagePackDouble: {
-            object = [NSNumber numberWithDouble:CFConvertDoubleSwappedToHost(TUPopVar(CFSwappedFloat64))];
-            break;
-        }
-            
-        case TUMessagePackNil: {
-            if ((opt & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
-                // the one case where returning nil is not an error
-                return nil;
-            } else {
-                object = [NSNull null];
-            }
-            break;
-        }
-            
-        case TUMessagePackTrue: {
-            object = (id)kCFBooleanTrue;
-            break;
-        } case TUMessagePackFalse: {
-            object = (id)kCFBooleanFalse;
-            break;
-        }
-            
-        case TUMessagePackStr8: {
-            uint8_t length = TUPopVar(uint8_t);
-            object = [self _popString:length options:opt];
-            break;
-        } case TUMessagePackStr16: {
-            uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
-            object = [self _popString:length options:opt];
-            break;
-        } case TUMessagePackStr32: {
-            uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
-            object = [self _popString:length options:opt];
-            break;
-        }
-            
-        case TUMessagePackBin8: {
-            uint8_t length = TUPopVar(uint8_t);
-            object = [self _popData:length];
-            if (opt & TUMessagePackReadingMutableLeaves) {
-                object = [object mutableCopy];
+            case TUMessagePackUInt8: {
+                object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
+                break;
+            } case TUMessagePackUInt16: {
+                object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
+                break;
+            } case TUMessagePackUInt32: {
+                object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
+                break;
+            } case TUMessagePackUInt64: {
+                object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
+                break;
             }
             
-            break;
-        } case TUMessagePackBin16: {
-            uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
-            object = [self _popData:length];
-            if (opt & TUMessagePackReadingMutableLeaves) {
-                object = [object mutableCopy];
+            case TUMessagePackInt8: {
+                object = [NSNumber numberWithChar:TUPopVar(int8_t)];
+                break;
+            } case TUMessagePackInt16: {
+                object = [NSNumber numberWithShort:CFSwapInt16BigToHost(TUPopVar(int16_t))];
+                break;
+            } case TUMessagePackInt32: {
+                object = [NSNumber numberWithLong:CFSwapInt32BigToHost(TUPopVar(int32_t))];
+                break;
+            } case TUMessagePackInt64: {
+                object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(TUPopVar(int64_t))];
+                break;
             }
             
-            break;
-        } case TUMessagePackBin32: {
-            uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
-            object = [self _popData:length];
-            if (opt & TUMessagePackReadingMutableLeaves) {
-                object = [object mutableCopy];
+            case TUMessagePackFloat: {
+                object = [NSNumber numberWithFloat:CFConvertFloatSwappedToHost(TUPopVar(CFSwappedFloat32))];
+                break;
+            } case TUMessagePackDouble: {
+                object = [NSNumber numberWithDouble:CFConvertDoubleSwappedToHost(TUPopVar(CFSwappedFloat64))];
+                break;
             }
             
-            break;
-        }
+            case TUMessagePackNil: {
+                if ((_options & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
+                    // the one case where returning nil is not an error
+                    return nil;
+                } else {
+                    object = [NSNull null];
+                }
+                break;
+            }
+            
+            case TUMessagePackTrue: {
+                object = (id)kCFBooleanTrue;
+                break;
+            } case TUMessagePackFalse: {
+                object = (id)kCFBooleanFalse;
+                break;
+            }
+            
+            case TUMessagePackStr8: {
+                uint8_t length = TUPopVar(uint8_t);
+                object = [self _popString:length];
+                break;
+            } case TUMessagePackStr16: {
+                uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+                object = [self _popString:length];
+                break;
+            } case TUMessagePackStr32: {
+                uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+                object = [self _popString:length];
+                break;
+            }
+            
+            case TUMessagePackBin8: {
+                uint8_t length = TUPopVar(uint8_t);
+                object = [self _popData:length];
+                if (_options & TUMessagePackReadingMutableLeaves) {
+                    object = [object mutableCopy];
+                }
+                
+                break;
+            } case TUMessagePackBin16: {
+                uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+                object = [self _popData:length];
+                if (_options & TUMessagePackReadingMutableLeaves) {
+                    object = [object mutableCopy];
+                }
+                
+                break;
+            } case TUMessagePackBin32: {
+                uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+                object = [self _popData:length];
+                if (_options & TUMessagePackReadingMutableLeaves) {
+                    object = [object mutableCopy];
+                }
+                
+                break;
+            }
             
         default: {
             if (!(code & 0b10000000)) {
@@ -178,7 +192,10 @@ typedef enum : uint8_t {
                 object = [NSNumber numberWithChar:code];
             } else if ((code & 0b11100000) == TUMessagePackFixstr) {
                 uint8_t length = code & ~0b11100000;
-                object = [self _popString:length options:opt];
+                object = [self _popString:length];
+            } else if ((code & 0b11110000) == TUMessagePackFixarray) {
+                uint8_t length = code & ~0b11110000;
+                object = [self _popArray:length];
             }
             
             break;
@@ -186,29 +203,47 @@ typedef enum : uint8_t {
     }
     
     
-    if (object == nil && error != NULL) {
-        *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
+    if (object == nil && _error == nil) {
+        _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
     }
+    
     return object;
 }
 
-- (id)_popString:(NSUInteger)length options:(TUMessagePackReadingOptions)opt
+- (id)_popString:(NSUInteger)length
 {
     NSData *stringData = [self _popData:length];
     
-    if (opt & TUMessagePackReadingStringsAsData) {
-        if (opt & TUMessagePackReadingMutableLeaves) {
+    if (_options & TUMessagePackReadingStringsAsData) {
+        if (_options & TUMessagePackReadingMutableLeaves) {
             return [stringData mutableCopy];
         } else {
             return stringData;
         }
     } else {
-        if (opt & TUMessagePackReadingMutableLeaves) {
+        if (_options & TUMessagePackReadingMutableLeaves) {
             return [[NSMutableString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
         } else {
             return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
         }
     }
+}
+
+- (id)_popArray:(NSUInteger)length
+{
+    id __unsafe_unretained *objects = (id __unsafe_unretained *)alloca(sizeof(id) * length);
+    
+    for (NSUInteger index = 0; index < length; index++) {
+        __attribute__((objc_precise_lifetime)) id object = [self _popObject];
+        
+        if (object != nil) {
+            objects[index] = object;
+        } else {
+            return nil;
+        }
+    }
+    
+    return [[NSArray alloc] initWithObjects:objects count:length];
 }
 
 - (NSData *)_popData:(NSUInteger)length
