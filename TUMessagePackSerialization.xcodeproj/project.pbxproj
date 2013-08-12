@@ -14,6 +14,7 @@
 		114CBBCA17B86F5000D4D629 /* Int16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 114CBBC717B86F5000D4D629 /* Int16.msgpack */; };
 		114CBBCB17B86F5000D4D629 /* Int32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 114CBBC817B86F5000D4D629 /* Int32.msgpack */; };
 		114CBBCD17B86F7000D4D629 /* UInt64.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 114CBBCC17B86F7000D4D629 /* UInt64.msgpack */; };
+		114CBBCF17B8719300D4D629 /* Nil.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 114CBBCE17B8719300D4D629 /* Nil.msgpack */; };
 		117581FE17B6AC810032442E /* UInt8.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FD17B6AC810032442E /* UInt8.msgpack */; };
 		1175820017B6B4F40032442E /* Int64.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FF17B6B4F40032442E /* Int64.msgpack */; };
 		11E7931217B68BF100C781B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7931117B68BF100C781B3 /* Foundation.framework */; };
@@ -59,6 +60,7 @@
 		114CBBC717B86F5000D4D629 /* Int16.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Int16.msgpack; sourceTree = "<group>"; };
 		114CBBC817B86F5000D4D629 /* Int32.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Int32.msgpack; sourceTree = "<group>"; };
 		114CBBCC17B86F7000D4D629 /* UInt64.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UInt64.msgpack; sourceTree = "<group>"; };
+		114CBBCE17B8719300D4D629 /* Nil.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Nil.msgpack; sourceTree = "<group>"; };
 		117581FD17B6AC810032442E /* UInt8.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UInt8.msgpack; sourceTree = "<group>"; };
 		117581FF17B6B4F40032442E /* Int64.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Int64.msgpack; sourceTree = "<group>"; };
 		11E7930E17B68BF100C781B3 /* libTUMessagePackSerialization.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTUMessagePackSerialization.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,6 +169,7 @@
 				114CBBC717B86F5000D4D629 /* Int16.msgpack */,
 				114CBBC817B86F5000D4D629 /* Int32.msgpack */,
 				117581FF17B6B4F40032442E /* Int64.msgpack */,
+				114CBBCE17B8719300D4D629 /* Nil.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -253,6 +256,7 @@
 				11E7932C17B68BF100C781B3 /* InfoPlist.strings in Resources */,
 				114CBBCB17B86F5000D4D629 /* Int32.msgpack in Resources */,
 				117581FE17B6AC810032442E /* UInt8.msgpack in Resources */,
+				114CBBCF17B8719300D4D629 /* Nil.msgpack in Resources */,
 				114CBBC317B86BFC00D4D629 /* UInt16.msgpack in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

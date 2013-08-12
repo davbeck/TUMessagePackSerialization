@@ -27,6 +27,8 @@ typedef enum : uint8_t {
     TUMessagePackInt16 = 0xD1,
     TUMessagePackInt32 = 0xD2,
     TUMessagePackInt64 = 0xD3,
+    
+    TUMessagePackNil = 0xC0,
 } TUMessagePackCode;
 
 
@@ -59,41 +61,48 @@ typedef enum : uint8_t {
     
     TUMessagePackCode code = TUPopVar(uint8_t);
     
-    // first we check mixed codes (codes that mix code and value)
-    if (!(code & 0b10000000)) {
-        object = [NSNumber numberWithUnsignedChar:code];
-    } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
-        object = [NSNumber numberWithChar:code];
-    } else {
-        // the rest of the codes are all 8 bits
-        switch (code) {
-            case TUMessagePackUInt8: {
-                object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
-                break;
-            } case TUMessagePackUInt16: {
-                object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
-                break;
-            } case TUMessagePackUInt32: {
-                object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
-                break;
-            } case TUMessagePackUInt64: {
-                object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
-                break;
+    switch (code) {
+        case TUMessagePackUInt8: {
+            object = [NSNumber numberWithUnsignedChar:TUPopVar(uint8_t)];
+            break;
+        } case TUMessagePackUInt16: {
+            object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(TUPopVar(uint16_t))];
+            break;
+        } case TUMessagePackUInt32: {
+            object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(TUPopVar(uint32_t))];
+            break;
+        } case TUMessagePackUInt64: {
+            object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(TUPopVar(uint64_t))];
+            break;
+        }
+            
+        case TUMessagePackInt8: {
+            object = [NSNumber numberWithChar:TUPopVar(int8_t)];
+            break;
+        } case TUMessagePackInt16: {
+            object = [NSNumber numberWithShort:CFSwapInt16BigToHost(TUPopVar(int16_t))];
+            break;
+        } case TUMessagePackInt32: {
+            object = [NSNumber numberWithLong:CFSwapInt32BigToHost(TUPopVar(int32_t))];
+            break;
+        } case TUMessagePackInt64: {
+            object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(TUPopVar(int64_t))];
+            break;
+        }
+            
+        case TUMessagePackNil: {
+            object = [NSNull null];
+            break;
+        }
+            
+        default: {
+            if (!(code & 0b10000000)) {
+                object = [NSNumber numberWithUnsignedChar:code];
+            } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
+                object = [NSNumber numberWithChar:code];
             }
             
-            case TUMessagePackInt8: {
-                object = [NSNumber numberWithChar:TUPopVar(int8_t)];
-                break;
-            } case TUMessagePackInt16: {
-                object = [NSNumber numberWithShort:CFSwapInt16BigToHost(TUPopVar(int16_t))];
-                break;
-            } case TUMessagePackInt32: {
-                object = [NSNumber numberWithLong:CFSwapInt32BigToHost(TUPopVar(int32_t))];
-                break;
-            } case TUMessagePackInt64: {
-                object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(TUPopVar(int64_t))];
-                break;
-            }
+            break;
         }
     }
     

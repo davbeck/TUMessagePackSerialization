@@ -100,4 +100,12 @@
     [self _testReadingWithType:@"Int64" expectedValue:@-6223172016852725913];
 }
 
+
+#pragma mark - Nil
+
+- (void)testNilReading
+{
+    [self _testReadingWithType:@"Nil" expectedValue:[NSNull null]];
+}
+
 @end
