@@ -35,6 +35,11 @@ typedef enum : uint8_t {
     
     TUMessagePackTrue = 0xC3,
     TUMessagePackFalse = 0xC2,
+    
+    TUMessagePackFixstr = 0xA0,
+    TUMessagePackStr8 = 0xD9 ,
+    TUMessagePackStr16 = 0xDA,
+    TUMessagePackStr32 = 0xDB,
 } TUMessagePackCode;
 
 
@@ -122,11 +127,36 @@ typedef enum : uint8_t {
             break;
         }
             
+        case TUMessagePackStr8: {
+            uint8_t length = TUPopVar(uint8_t);
+            NSData *stringData = [self _popData:length];
+            
+            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            break;
+        } case TUMessagePackStr16: {
+            uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+            NSData *stringData = [self _popData:length];
+            
+            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            break;
+        } case TUMessagePackStr32: {
+            uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+            NSData *stringData = [self _popData:length];
+            
+            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            break;
+        }
+            
         default: {
             if (!(code & 0b10000000)) {
                 object = [NSNumber numberWithUnsignedChar:code];
-            } else if ((code & TUMessagePackNegativeFixint) == TUMessagePackNegativeFixint) {
+            } else if ((code & 0b11100000) == TUMessagePackNegativeFixint) {
                 object = [NSNumber numberWithChar:code];
+            } else if ((code & 0b11100000) == TUMessagePackFixstr) {
+                uint8_t length = code & ~0b11100000;
+                NSData *stringData = [self _popData:length];
+                
+                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
             }
             
             break;
