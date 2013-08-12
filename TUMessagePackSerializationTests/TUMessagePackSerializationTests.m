@@ -29,12 +29,12 @@
     [super tearDown];
 }
 
-- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue additionalTests:(void(^)(id result))additionalTests
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue additionalTests:(void(^)(id result))additionalTests options:(TUMessagePackReadingOptions)options
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
     
     NSError *error = nil;
-    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments error:&error];
+    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:&error];
     
     XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
@@ -43,6 +43,11 @@
     if (additionalTests != nil) {
         additionalTests(result);
     }
+}
+
+- (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue additionalTests:(void(^)(id result))additionalTests
+{
+    [self _testReadingWithType:testType expectedValue:expectedValue additionalTests:additionalTests options:0];
 }
 
 - (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue
@@ -176,6 +181,13 @@
     NSString *testString = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"] encoding:NSUTF8StringEncoding error:NULL];
     
     [self _testReadingWithType:@"Str32" expectedValue:testString];
+}
+
+- (void)testStringAsData
+{
+    NSData *testString = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"]];
+    
+    [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:nil options:TUMessagePackReadingStringsAsData];
 }
 
 @end

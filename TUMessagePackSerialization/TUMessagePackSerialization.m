@@ -135,19 +135,31 @@ typedef enum : uint8_t {
             uint8_t length = TUPopVar(uint8_t);
             NSData *stringData = [self _popData:length];
             
-            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            if (opt & TUMessagePackReadingStringsAsData) {
+                object = stringData;
+            } else {
+                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            }
             break;
         } case TUMessagePackStr16: {
             uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
             NSData *stringData = [self _popData:length];
             
-            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            if (opt & TUMessagePackReadingStringsAsData) {
+                object = stringData;
+            } else {
+                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            }
             break;
         } case TUMessagePackStr32: {
             uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
             NSData *stringData = [self _popData:length];
             
-            object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            if (opt & TUMessagePackReadingStringsAsData) {
+                object = stringData;
+            } else {
+                object = [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
+            }
             break;
         }
             
