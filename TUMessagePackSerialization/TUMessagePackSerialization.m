@@ -91,7 +91,12 @@ typedef enum : uint8_t {
         }
             
         case TUMessagePackNil: {
-            object = [NSNull null];
+            if ((opt & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
+                // the one case where returning nil is not an error
+                return nil;
+            } else {
+                object = [NSNull null];
+            }
             break;
         }
             

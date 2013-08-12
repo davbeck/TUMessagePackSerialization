@@ -36,7 +36,7 @@
     NSError *error = nil;
     id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments error:&error];
     
-    XCTAssertNotNil(result, @"Error reading %@: %@", testType, error);
+    XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
     XCTAssertTrue([result isEqual:expectedValue], @"%@ value incorrect (%@)", testType, result);
 }
@@ -106,6 +106,18 @@
 - (void)testNilReading
 {
     [self _testReadingWithType:@"Nil" expectedValue:[NSNull null]];
+}
+
+- (void)testNilReadingOption
+{
+    NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:@"Nil" withExtension:@"msgpack"]];
+    
+    NSError *error = nil;
+    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | TUMessagePackReadingNSNullAsNil error:&error];
+    
+    XCTAssertNil(error, @"Error reading Nil with nil option: %@", error);
+    
+    XCTAssertTrue(result == nil, @"Nil value incorrect (%@)", result);
 }
 
 @end
