@@ -240,4 +240,32 @@
 }
 
 
+#pragma mark - Map (Dictionary)
+
+- (void)testFixMap
+{
+    [self _testReadingWithType:@"Fixmap" expectedValue:@{ @"key": @"value", @"one": @1, @"float": @2.8 }];
+}
+
+- (void)testMap16
+{
+    NSMutableDictionary *testMap = [[NSMutableDictionary alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 200; i++) {
+        testMap[@(i)] = @(i + 100);
+    }
+    
+    [self _testReadingWithType:@"Map16" expectedValue:testMap];
+}
+
+- (void)testMap32
+{
+    NSMutableDictionary *testMap = [[NSMutableDictionary alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 82590; i++) {
+        testMap[@(i)] = @(i + 100);
+    }
+    
+    [self _testReadingWithType:@"Map32" expectedValue:testMap];
+}
+
+
 @end

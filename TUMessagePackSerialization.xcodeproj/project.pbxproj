@@ -25,6 +25,9 @@
 		114CBBDF17B9283D00D4D629 /* Bin16.ico in Resources */ = {isa = PBXBuildFile; fileRef = 114CBBDE17B9283D00D4D629 /* Bin16.ico */; };
 		117581FE17B6AC810032442E /* UInt8.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FD17B6AC810032442E /* UInt8.msgpack */; };
 		1175820017B6B4F40032442E /* Int64.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117581FF17B6B4F40032442E /* Int64.msgpack */; };
+		117AB31F17BF2F700019ADC5 /* Fixmap.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */; };
+		117AB32117BF32E20019ADC5 /* Map16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32017BF32E20019ADC5 /* Map16.msgpack */; };
+		117AB32317BF33510019ADC5 /* Map32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32217BF33510019ADC5 /* Map32.msgpack */; };
 		11925ADB17B92F8000F49ED4 /* Fixarray.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */; };
 		11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADC17B93B0600F49ED4 /* Array16.msgpack */; };
 		11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADD17B93B0600F49ED4 /* Array32.msgpack */; };
@@ -82,6 +85,10 @@
 		114CBBDE17B9283D00D4D629 /* Bin16.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = Bin16.ico; sourceTree = "<group>"; };
 		117581FD17B6AC810032442E /* UInt8.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UInt8.msgpack; sourceTree = "<group>"; };
 		117581FF17B6B4F40032442E /* Int64.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Int64.msgpack; sourceTree = "<group>"; };
+		117AB31D17BF281F0019ADC5 /* TUMessagePackExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUMessagePackExt.h; sourceTree = "<group>"; };
+		117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fixmap.msgpack; sourceTree = "<group>"; };
+		117AB32017BF32E20019ADC5 /* Map16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Map16.msgpack; sourceTree = "<group>"; };
+		117AB32217BF33510019ADC5 /* Map32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Map32.msgpack; sourceTree = "<group>"; };
 		11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixarray.msgpack; sourceTree = "<group>"; };
 		11925ADC17B93B0600F49ED4 /* Array16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array16.msgpack; sourceTree = "<group>"; };
 		11925ADD17B93B0600F49ED4 /* Array32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array32.msgpack; sourceTree = "<group>"; };
@@ -156,6 +163,7 @@
 			children = (
 				11E7931617B68BF100C781B3 /* TUMessagePackSerialization.h */,
 				11E7931817B68BF100C781B3 /* TUMessagePackSerialization.m */,
+				117AB31D17BF281F0019ADC5 /* TUMessagePackExt.h */,
 				11E7931417B68BF100C781B3 /* Supporting Files */,
 			);
 			path = TUMessagePackSerialization;
@@ -203,6 +211,9 @@
 				11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */,
 				11925ADC17B93B0600F49ED4 /* Array16.msgpack */,
 				11925ADD17B93B0600F49ED4 /* Array32.msgpack */,
+				117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */,
+				117AB32017BF32E20019ADC5 /* Map16.msgpack */,
+				117AB32217BF33510019ADC5 /* Map32.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -279,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				117AB32117BF32E20019ADC5 /* Map16.msgpack in Resources */,
 				114CBBD217B873E000D4D629 /* False.msgpack in Resources */,
 				114CBBD517B878A300D4D629 /* Double.msgpack in Resources */,
 				114CBBD917B87FC800D4D629 /* Fixstr.msgpack in Resources */,
@@ -286,6 +298,7 @@
 				114CBBC517B86CDE00D4D629 /* UInt32.msgpack in Resources */,
 				114CBBCD17B86F7000D4D629 /* UInt64.msgpack in Resources */,
 				11E7933817B6957900C781B3 /* NegativeFixint.msgpack in Resources */,
+				117AB31F17BF2F700019ADC5 /* Fixmap.msgpack in Resources */,
 				114CBBCA17B86F5000D4D629 /* Int16.msgpack in Resources */,
 				114CBBC917B86F5000D4D629 /* Int8.msgpack in Resources */,
 				11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */,
@@ -295,6 +308,7 @@
 				114CBBDA17B87FC800D4D629 /* Str16.msgpack in Resources */,
 				11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */,
 				114CBBCB17B86F5000D4D629 /* Int32.msgpack in Resources */,
+				117AB32317BF33510019ADC5 /* Map32.msgpack in Resources */,
 				114CBBDF17B9283D00D4D629 /* Bin16.ico in Resources */,
 				114CBBDD17B8806C00D4D629 /* Str32.txt in Resources */,
 				117581FE17B6AC810032442E /* UInt8.msgpack in Resources */,
