@@ -28,6 +28,8 @@
 		117AB31F17BF2F700019ADC5 /* Fixmap.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */; };
 		117AB32117BF32E20019ADC5 /* Map16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32017BF32E20019ADC5 /* Map16.msgpack */; };
 		117AB32317BF33510019ADC5 /* Map32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32217BF33510019ADC5 /* Map32.msgpack */; };
+		117AB32617BF34200019ADC5 /* NSDate+TUMessagePackExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */; };
+		117AB32917BF366E0019ADC5 /* TUMessagePackExtInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 117AB32817BF366E0019ADC5 /* TUMessagePackExtInfo.m */; };
 		11925ADB17B92F8000F49ED4 /* Fixarray.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */; };
 		11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADC17B93B0600F49ED4 /* Array16.msgpack */; };
 		11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADD17B93B0600F49ED4 /* Array32.msgpack */; };
@@ -89,6 +91,10 @@
 		117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Fixmap.msgpack; sourceTree = "<group>"; };
 		117AB32017BF32E20019ADC5 /* Map16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Map16.msgpack; sourceTree = "<group>"; };
 		117AB32217BF33510019ADC5 /* Map32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Map32.msgpack; sourceTree = "<group>"; };
+		117AB32417BF34200019ADC5 /* NSDate+TUMessagePackExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+TUMessagePackExt.h"; sourceTree = "<group>"; };
+		117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TUMessagePackExt.m"; sourceTree = "<group>"; };
+		117AB32717BF366E0019ADC5 /* TUMessagePackExtInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUMessagePackExtInfo.h; sourceTree = "<group>"; };
+		117AB32817BF366E0019ADC5 /* TUMessagePackExtInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackExtInfo.m; sourceTree = "<group>"; };
 		11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixarray.msgpack; sourceTree = "<group>"; };
 		11925ADC17B93B0600F49ED4 /* Array16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array16.msgpack; sourceTree = "<group>"; };
 		11925ADD17B93B0600F49ED4 /* Array32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array32.msgpack; sourceTree = "<group>"; };
@@ -163,6 +169,8 @@
 			children = (
 				11E7931617B68BF100C781B3 /* TUMessagePackSerialization.h */,
 				11E7931817B68BF100C781B3 /* TUMessagePackSerialization.m */,
+				117AB32717BF366E0019ADC5 /* TUMessagePackExtInfo.h */,
+				117AB32817BF366E0019ADC5 /* TUMessagePackExtInfo.m */,
 				117AB31D17BF281F0019ADC5 /* TUMessagePackExt.h */,
 				11E7931417B68BF100C781B3 /* Supporting Files */,
 			);
@@ -181,6 +189,8 @@
 			isa = PBXGroup;
 			children = (
 				11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */,
+				117AB32417BF34200019ADC5 /* NSDate+TUMessagePackExt.h */,
+				117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */,
 				11E7932817B68BF100C781B3 /* Supporting Files */,
 			);
 			path = TUMessagePackSerializationTests;
@@ -327,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				11E7931917B68BF100C781B3 /* TUMessagePackSerialization.m in Sources */,
+				117AB32917BF366E0019ADC5 /* TUMessagePackExtInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				117AB32617BF34200019ADC5 /* NSDate+TUMessagePackExt.m in Sources */,
 				11E7932E17B68BF100C781B3 /* TUMessagePackSerializationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,16 +8,15 @@
 
 #import "TUMessagePackSerialization.h"
 
+#import "TUMessagePackExtInfo.h"
+
 
 NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 
 typedef enum : uint8_t {
-    // mixed codes
 	TUMessagePackPositiveFixint = 0x00, // unused... it's special
 	TUMessagePackNegativeFixint = 0xE0,
-    
-    // full codes
     TUMessagePackUInt8 = 0xCC,
     TUMessagePackUInt16 = 0xCD,
     TUMessagePackUInt32 = 0xCE,
@@ -52,6 +51,15 @@ typedef enum : uint8_t {
     TUMessagePackFixmap = 0x80,
     TUMessagePackMap16 = 0xDE,
     TUMessagePackMap32 = 0xDF,
+    
+    TUMessagePackFixext1 = 0xD4,
+    TUMessagePackFixext2 = 0xD5,
+    TUMessagePackFixext4 = 0xD6,
+    TUMessagePackFixext8 = 0xD7,
+    TUMessagePackFixext16 = 0xD8,
+    TUMessagePackExt8 = 0xC7,
+    TUMessagePackExt16 = 0xC8,
+    TUMessagePackExt32 = 0xC9,
 } TUMessagePackCode;
 
 
@@ -82,9 +90,20 @@ return nil; \
     return [serialization _messagePackObjectWithData:data options:opt error:error];
 }
 
++ (NSMutableDictionary *)_registeredExtClasses
+{
+    static NSMutableDictionary *registeredExtClasses = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        registeredExtClasses = [NSMutableDictionary new];
+    });
+    
+    return registeredExtClasses;
+}
+
 + (void)registerExtWithClass:(Class)extClass type:(uint8_t)type
 {
-    
+    [self _registeredExtClasses][@(type)] = extClass;
 }
 
 - (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
@@ -258,6 +277,49 @@ return nil; \
             break;
         }
             
+        case TUMessagePackFixext1: {
+            object = [self _popExt:1];
+            
+            break;
+        } case TUMessagePackFixext2: {
+            object = [self _popExt:2];
+            
+            break;
+        } case TUMessagePackFixext4: {
+            object = [self _popExt:4];
+            
+            break;
+        } case TUMessagePackFixext8: {
+            object = [self _popExt:8];
+            
+            break;
+        } case TUMessagePackFixext16: {
+            object = [self _popExt:16];
+            
+            break;
+        } case TUMessagePackExt8: {
+            TUCheckDataForVar(uint8_t);
+            uint8_t length = TUPopVar(uint8_t);
+            
+            object = [self _popExt:length];
+            
+            break;
+        } case TUMessagePackExt16: {
+            TUCheckDataForVar(uint16_t);
+            uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
+            
+            object = [self _popExt:length];
+            
+            break;
+        } case TUMessagePackExt32: {
+            TUCheckDataForVar(uint32_t);
+            uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
+            
+            object = [self _popExt:length];
+            
+            break;
+        }
+            
         default: {
             if (!(code & 0b10000000)) {
                 object = [NSNumber numberWithUnsignedChar:code];
@@ -284,6 +346,18 @@ return nil; \
     }
     
     return object;
+}
+
+- (NSData *)_popData:(NSUInteger)length
+{
+    if (_data.length >= _position + length) {
+        NSData *data = [_data subdataWithRange:NSMakeRange(_position, length)];
+        _position += length;
+        
+        return data;
+    }
+    
+    return nil;
 }
 
 - (id)_popString:(NSUInteger)length
@@ -346,16 +420,18 @@ return nil; \
     return [[NSDictionary alloc] initWithObjects:objects forKeys:keys count:count];
 }
 
-- (NSData *)_popData:(NSUInteger)length
+- (id)_popExt:(NSUInteger)length
 {
-    if (_data.length >= _position + length) {
-        NSData *data = [_data subdataWithRange:NSMakeRange(_position, length)];
-        _position += length;
-        
-        return data;
+    TUCheckDataForVar(uint8_t);
+    uint8_t type = TUPopVar(uint8_t);
+    NSData *extData = [self _popData:length];
+    
+    Class extClass = [self.class _registeredExtClasses][@(type)];
+    if (extClass == nil) {
+        extClass = [TUMessagePackExtInfo class];
     }
     
-    return nil;
+    return [[extClass alloc] initWithMessagePackExtData:extData type:type];
 }
 
 
