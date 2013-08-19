@@ -272,4 +272,16 @@
 
 // Ext reading test will go here when we can create the test file some how
 
+
+#pragma mark - Test Twitter
+
+// this is our 'real world' test that brings it all together
+- (void)testTwitter
+{
+    NSData *twitterData = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"Twitter" withExtension:@"json"]];
+    id twitter = [NSJSONSerialization JSONObjectWithData:twitterData options:0 error:NULL];
+    
+    [self _testReadingWithType:@"Twitter" expectedValue:twitter];
+}
+
 @end

@@ -30,6 +30,8 @@
 		117AB32317BF33510019ADC5 /* Map32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32217BF33510019ADC5 /* Map32.msgpack */; };
 		117AB32617BF34200019ADC5 /* NSDate+TUMessagePackExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */; };
 		117AB32917BF366E0019ADC5 /* TUMessagePackExtInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 117AB32817BF366E0019ADC5 /* TUMessagePackExtInfo.m */; };
+		117AB32B17C274DE0019ADC5 /* Twitter.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32A17C274DE0019ADC5 /* Twitter.msgpack */; };
+		117AB32D17C275300019ADC5 /* Twitter.json in Resources */ = {isa = PBXBuildFile; fileRef = 117AB32C17C275300019ADC5 /* Twitter.json */; };
 		11925ADB17B92F8000F49ED4 /* Fixarray.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */; };
 		11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADC17B93B0600F49ED4 /* Array16.msgpack */; };
 		11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADD17B93B0600F49ED4 /* Array32.msgpack */; };
@@ -95,6 +97,8 @@
 		117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+TUMessagePackExt.m"; sourceTree = "<group>"; };
 		117AB32717BF366E0019ADC5 /* TUMessagePackExtInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TUMessagePackExtInfo.h; sourceTree = "<group>"; };
 		117AB32817BF366E0019ADC5 /* TUMessagePackExtInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackExtInfo.m; sourceTree = "<group>"; };
+		117AB32A17C274DE0019ADC5 /* Twitter.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Twitter.msgpack; sourceTree = "<group>"; };
+		117AB32C17C275300019ADC5 /* Twitter.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Twitter.json; sourceTree = "<group>"; };
 		11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixarray.msgpack; sourceTree = "<group>"; };
 		11925ADC17B93B0600F49ED4 /* Array16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array16.msgpack; sourceTree = "<group>"; };
 		11925ADD17B93B0600F49ED4 /* Array32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array32.msgpack; sourceTree = "<group>"; };
@@ -224,6 +228,8 @@
 				117AB31E17BF2F700019ADC5 /* Fixmap.msgpack */,
 				117AB32017BF32E20019ADC5 /* Map16.msgpack */,
 				117AB32217BF33510019ADC5 /* Map32.msgpack */,
+				117AB32C17C275300019ADC5 /* Twitter.json */,
+				117AB32A17C274DE0019ADC5 /* Twitter.msgpack */,
 				11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */,
 				11E7932A17B68BF100C781B3 /* InfoPlist.strings */,
 			);
@@ -301,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				117AB32117BF32E20019ADC5 /* Map16.msgpack in Resources */,
+				117AB32B17C274DE0019ADC5 /* Twitter.msgpack in Resources */,
 				114CBBD217B873E000D4D629 /* False.msgpack in Resources */,
 				114CBBD517B878A300D4D629 /* Double.msgpack in Resources */,
 				114CBBD917B87FC800D4D629 /* Fixstr.msgpack in Resources */,
@@ -310,6 +317,7 @@
 				11E7933817B6957900C781B3 /* NegativeFixint.msgpack in Resources */,
 				117AB31F17BF2F700019ADC5 /* Fixmap.msgpack in Resources */,
 				114CBBCA17B86F5000D4D629 /* Int16.msgpack in Resources */,
+				117AB32D17C275300019ADC5 /* Twitter.json in Resources */,
 				114CBBC917B86F5000D4D629 /* Int8.msgpack in Resources */,
 				11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */,
 				114CBBDB17B87FC800D4D629 /* Str32.msgpack in Resources */,
