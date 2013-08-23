@@ -58,12 +58,12 @@
 
 #pragma mark - Fixint
 
-- (void)testPositiveFixintReading
+- (void)testPositiveFixint
 {
     [self _testReadingWithType:@"PositiveFixint" expectedValue:@42];
 }
 
-- (void)testNegativeFixintReading
+- (void)testNegativeFixint
 {
     [self _testReadingWithType:@"NegativeFixint" expectedValue:@-28];
 }
@@ -71,22 +71,22 @@
 
 #pragma mark - UInt
 
-- (void)testUInt8Reading
+- (void)testUInt8
 {
     [self _testReadingWithType:@"UInt8" expectedValue:@250];
 }
 
-- (void)testUInt16Reading
+- (void)testUInt16
 {
     [self _testReadingWithType:@"UInt16" expectedValue:@48516];
 }
 
-- (void)testUInt32Reading
+- (void)testUInt32
 {
     [self _testReadingWithType:@"UInt32" expectedValue:@1299962209];
 }
 
-- (void)testUInt64Reading
+- (void)testUInt64
 {
     [self _testReadingWithType:@"UInt64" expectedValue:@6223172016852725913];
 }
@@ -94,22 +94,22 @@
 
 #pragma mark - Int
 
-- (void)testInt8Reading
+- (void)testInt8
 {
     [self _testReadingWithType:@"Int8" expectedValue:@-100];
 }
 
-- (void)testInt16Reading
+- (void)testInt16
 {
     [self _testReadingWithType:@"Int16" expectedValue:@-200];
 }
 
-- (void)testInt32Reading
+- (void)testInt32
 {
     [self _testReadingWithType:@"Int32" expectedValue:@-1299962209];
 }
 
-- (void)testInt64Reading
+- (void)testInt64
 {
     [self _testReadingWithType:@"Int64" expectedValue:@-6223172016852725913];
 }
@@ -119,7 +119,7 @@
 
 // float reading test will go here when we can create the test file some how
 
-- (void)testDoubleReading
+- (void)testDouble
 {
     [self _testReadingWithType:@"Double" expectedValue:@5672562398523.6523];
 }
@@ -127,12 +127,12 @@
 
 #pragma mark - Nil
 
-- (void)testNilReading
+- (void)testNil
 {
     [self _testReadingWithType:@"Nil" expectedValue:[NSNull null]];
 }
 
-- (void)testNilReadingOption
+- (void)testNilOption
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:@"Nil" withExtension:@"msgpack"]];
     
@@ -147,14 +147,14 @@
 
 #pragma mark - Bool
 
-- (void)testTrueReading
+- (void)testTrue
 {
     [self _testReadingWithType:@"True" expectedValue:@YES additionalTests:^(id result) {
         XCTAssertEqual((id)kCFBooleanTrue, result, @"True does not equeal kCFBooleanTrue constant");
     }];
 }
 
-- (void)testFalseReading
+- (void)testFalse
 {
     [self _testReadingWithType:@"False" expectedValue:@NO additionalTests:^(id result) {
         XCTAssertEqual((id)kCFBooleanFalse, result, @"True does not equeal kCFBooleanFalse constant");

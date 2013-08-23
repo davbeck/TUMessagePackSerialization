@@ -463,11 +463,6 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
             int64_t signedValue = number.longLongValue;
             
             if ([number isSigned] && signedValue < 0) {
-                NSLog(@"pow(2, 4 * 7): %f", -pow(2, 4 * 8 - 1));
-                NSLog(@"min: %d", INT_MIN);
-                NSLog(@"max: %d", INT32_MIN);
-                
-                
                 if (signedValue > -pow(2, 5)) {
                     int8_t value = signedValue;
                     return [NSData dataWithBytes:&value length:sizeof(value)];
