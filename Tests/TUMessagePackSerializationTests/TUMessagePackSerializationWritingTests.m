@@ -64,6 +64,29 @@
 }
 
 
+#pragma mark - UInt
+
+- (void)testUInt8Writing
+{
+    [self _testWritingWithValue:@250 type:@"UInt8"];
+}
+
+- (void)testUInt16Writing
+{
+    [self _testWritingWithValue:@48516 type:@"UInt16"];
+}
+
+- (void)testUInt32Writing
+{
+    [self _testWritingWithValue:@1299962209 type:@"UInt32"];
+}
+
+- (void)testUInt64Writing
+{
+    [self _testWritingWithValue:@6223172016852725913 type:@"UInt64"];
+}
+
+
 #pragma mark - Bool
 
 - (void)testPositiveTrueWriting

@@ -438,6 +438,14 @@ return nil; \
 
 #pragma mark - Writing
 
+#define ReturnDataWithUnsignedInt(code, unsignedValue) do { \
+void *data = malloc(1 + sizeof(unsignedValue)); \
+memset(data, code, 1); \
+__typeof(unsignedValue) value = unsignedValue; \
+memcpy(data + 1, &value, sizeof(unsignedValue)); \
+return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
+} while(false);
+
 + (NSData *)dataWithMessagePackObject:(id)obj options:(TUMessagePackWritingOptions)opt error:(NSError **)error
 {
     if ([obj isKindOfClass:[NSNumber class]]) {
@@ -464,7 +472,15 @@ return nil; \
                 
                 if (unsignedValue < pow(2, 7)) {
                     uint8_t value = unsignedValue;
-                    return [NSData dataWithBytes:&value length:sizeof(value)];
+                    return [NSData dataWithBytes:&value length:1];
+                } else if (unsignedValue < pow(2, 1 * 8)) {
+                    ReturnDataWithUnsignedInt(TUMessagePackUInt8, (uint8_t)unsignedValue);
+                } else if (unsignedValue < pow(2, 2 * 8)) {
+                    ReturnDataWithUnsignedInt(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
+                } else if (unsignedValue < pow(2, 4 * 8)) {
+                    ReturnDataWithUnsignedInt(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
+                } else if (unsignedValue < pow(2, 8 * 8)) {
+                    ReturnDataWithUnsignedInt(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
                 }
             }
         }
