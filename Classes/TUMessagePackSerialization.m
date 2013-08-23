@@ -504,44 +504,73 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
         uint8_t value = TUMessagePackNil;
         return [NSData dataWithBytes:&value length:1];
     } else if ([obj isKindOfClass:[NSString class]]) {
-        const char *utfData = [(NSString *)obj UTF8String];
-        NSUInteger length = strlen(utfData);
+        NSData *data = [obj dataUsingEncoding:NSUTF8StringEncoding];
         
-        if (length < 32) {
-            void *data = malloc(1 + length);
-            
-            memset(data, TUMessagePackFixstr | length, 1);
-            memcpy(data + 1, utfData, length);
-            
-            return [NSData dataWithBytesNoCopy:data length:1 + length];
-        } else if (length < pow(2, 1 * 8) && !(opt & TUMessagePackWritingCompatabilityMode)) {
-            void *data = malloc(1 + 1 + length);
-            
-            memset(data, TUMessagePackStr8, 1);
-            AddVar((uint8_t)length, 1);
-            memcpy(data + 1 + 1, utfData, length);
-            
-            return [NSData dataWithBytesNoCopy:data length:1 + 1 + length];
-        } else if (length < pow(2, 2 * 8)) {
-            void *data = malloc(1 + 2 + length);
-            
-            memset(data, TUMessagePackStr16, 1);
-            AddVar(CFSwapInt16HostToBig(length), 1);
-            memcpy(data + 1 + 2, utfData, length);
-            
-            return [NSData dataWithBytesNoCopy:data length:1 + 2 + length];
-        } else if (length < pow(2, 4 * 8)) {
-            void *data = malloc(1 + 4 + length);
-            
-            memset(data, TUMessagePackStr32, 1);
-            AddVar(CFSwapInt32HostToBig(length), 1);
-            memcpy(data + 1 + 4, utfData, length);
-            
-            return [NSData dataWithBytesNoCopy:data length:1 + 4 + length];
+        if (data.length < 32) {
+            return [self _mpDataWithData:data code:TUMessagePackFixstr | data.length lengthBytes:0];
+        } else if (data.length < pow(2, 1 * 8) && !(opt & TUMessagePackWritingCompatabilityMode)) {
+            return [self _mpDataWithData:data code:TUMessagePackStr8 lengthBytes:1];
+        } else if (data.length < pow(2, 2 * 8)) {
+            return [self _mpDataWithData:data code:TUMessagePackStr16 lengthBytes:2];
+        } else if (data.length < pow(2, 4 * 8)) {
+            return [self _mpDataWithData:data code:TUMessagePackStr32 lengthBytes:4];
+        }
+    } else if ([obj isKindOfClass:[NSData class]]) {
+        NSData *data = obj;
+        
+        if (opt & TUMessagePackWritingCompatabilityMode) {
+            if (data.length < pow(2, 2 * 8)) {
+                return [self _mpDataWithData:data code:TUMessagePackStr16 lengthBytes:2];
+            } else if (data.length < pow(2, 4 * 8)) {
+                return [self _mpDataWithData:data code:TUMessagePackStr32 lengthBytes:4];
+            }
+        } else {
+            if (data.length < pow(2, 1 * 8)) {
+                return [self _mpDataWithData:data code:TUMessagePackBin8 lengthBytes:1];
+            } else if (data.length < pow(2, 2 * 8)) {
+                return [self _mpDataWithData:data code:TUMessagePackBin16 lengthBytes:2];
+            } else if (data.length < pow(2, 4 * 8)) {
+                return [self _mpDataWithData:data code:TUMessagePackBin32 lengthBytes:4];
+            }
         }
     }
     
+    
+    if (error != NULL) {
+        *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
+    }
+    
     return nil;
+}
+
++ (NSData *)_mpDataWithData:(NSData *)data code:(TUMessagePackCode)code lengthBytes:(NSUInteger)lengthBytes
+{
+    void *bytes = malloc(1 + lengthBytes + data.length);
+    
+    memset(bytes, code, 1);
+    
+    switch (lengthBytes) {
+        case 1: {
+            uint8_t length = data.length;
+            memcpy(bytes + 1, &length, lengthBytes);
+            
+            break;
+        } case 2: {
+            uint16_t length = CFSwapInt16HostToBig(data.length);
+            memcpy(bytes + 1, &length, lengthBytes);
+            
+            break;
+        } case 4: {
+            uint32_t length = CFSwapInt32HostToBig(data.length);
+            memcpy(bytes + 1, &length, lengthBytes);
+            
+            break;
+        }
+    }
+    
+    memcpy(bytes + 1 + lengthBytes, data.bytes, data.length);
+    
+    return [NSData dataWithBytesNoCopy:bytes length:1 + lengthBytes + data.length];
 }
 
 + (BOOL)isValidMessagePackObject:(id)obj

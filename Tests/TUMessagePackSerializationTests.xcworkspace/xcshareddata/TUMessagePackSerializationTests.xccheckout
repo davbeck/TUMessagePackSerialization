@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>22FEA135-5E97-4A81-BA30-B57D5F5B0CE8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TUMessagePackSerializationTests</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CC409543-B6E1-47CD-B1BD-3002210A2C15</key>
+		<string>ssh://github.com/davbeck/TUMessagePackSerialization.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Tests/TUMessagePackSerializationTests.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CC409543-B6E1-47CD-B1BD-3002210A2C15</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/davbeck/TUMessagePackSerialization.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CC409543-B6E1-47CD-B1BD-3002210A2C15</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CC409543-B6E1-47CD-B1BD-3002210A2C15</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TUMessagePackSerialization</string>
+		</dict>
+	</array>
+</dict>
+</plist>

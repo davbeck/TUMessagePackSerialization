@@ -34,10 +34,11 @@
 		11925ADB17B92F8000F49ED4 /* Fixarray.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */; };
 		11925ADE17B93B0600F49ED4 /* Array16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADC17B93B0600F49ED4 /* Array16.msgpack */; };
 		11925ADF17B93B0600F49ED4 /* Array32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11925ADD17B93B0600F49ED4 /* Array32.msgpack */; };
+		11A5F8B017C7047100D7933C /* TUMessagePackSerializationWritingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A5F8AF17C7047100D7933C /* TUMessagePackSerializationWritingTests.m */; };
 		11E7932017B68BF100C781B3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7931F17B68BF100C781B3 /* XCTest.framework */; };
 		11E7932117B68BF100C781B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7931117B68BF100C781B3 /* Foundation.framework */; };
 		11E7932317B68BF100C781B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E7932217B68BF100C781B3 /* UIKit.framework */; };
-		11E7932E17B68BF100C781B3 /* TUMessagePackSerializationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */; };
+		11E7932E17B68BF100C781B3 /* TUMessagePackSerializationReadingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 11E7932D17B68BF100C781B3 /* TUMessagePackSerializationReadingTests.m */; };
 		11E7933817B6957900C781B3 /* NegativeFixint.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 11E7933717B6957900C781B3 /* NegativeFixint.msgpack */; };
 		CFED289BE9B84D339B491CBC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A73D5CC228E0477BAB0BBC92 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -71,12 +72,13 @@
 		11925ADA17B92F7B00F49ED4 /* Fixarray.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fixarray.msgpack; sourceTree = "<group>"; };
 		11925ADC17B93B0600F49ED4 /* Array16.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array16.msgpack; sourceTree = "<group>"; };
 		11925ADD17B93B0600F49ED4 /* Array32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array32.msgpack; sourceTree = "<group>"; };
+		11A5F8AF17C7047100D7933C /* TUMessagePackSerializationWritingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackSerializationWritingTests.m; sourceTree = "<group>"; };
 		11E7931117B68BF100C781B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		11E7931E17B68BF100C781B3 /* TUMessagePackSerializationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TUMessagePackSerializationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E7931F17B68BF100C781B3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		11E7932217B68BF100C781B3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		11E7932917B68BF100C781B3 /* TUMessagePackSerializationTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TUMessagePackSerializationTests-Info.plist"; sourceTree = "<group>"; };
-		11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackSerializationTests.m; sourceTree = "<group>"; };
+		11E7932D17B68BF100C781B3 /* TUMessagePackSerializationReadingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TUMessagePackSerializationReadingTests.m; sourceTree = "<group>"; };
 		11E7933717B6957900C781B3 /* NegativeFixint.msgpack */ = {isa = PBXFileReference; lastKnownFileType = text; path = NegativeFixint.msgpack; sourceTree = "<group>"; };
 		A73D5CC228E0477BAB0BBC92 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F579BA82AD35415C8374CBAB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -129,7 +131,8 @@
 		11E7932717B68BF100C781B3 /* TUMessagePackSerializationTests */ = {
 			isa = PBXGroup;
 			children = (
-				11E7932D17B68BF100C781B3 /* TUMessagePackSerializationTests.m */,
+				11E7932D17B68BF100C781B3 /* TUMessagePackSerializationReadingTests.m */,
+				11A5F8AF17C7047100D7933C /* TUMessagePackSerializationWritingTests.m */,
 				117AB32417BF34200019ADC5 /* NSDate+TUMessagePackExt.h */,
 				117AB32517BF34200019ADC5 /* NSDate+TUMessagePackExt.m */,
 				11E7932817B68BF100C781B3 /* Supporting Files */,
@@ -296,7 +299,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				117AB32617BF34200019ADC5 /* NSDate+TUMessagePackExt.m in Sources */,
-				11E7932E17B68BF100C781B3 /* TUMessagePackSerializationTests.m in Sources */,
+				11A5F8B017C7047100D7933C /* TUMessagePackSerializationWritingTests.m in Sources */,
+				11E7932E17B68BF100C781B3 /* TUMessagePackSerializationReadingTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,7 +383,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TUMessagePackSerialization/TUMessagePackSerialization-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -400,7 +403,6 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TUMessagePackSerialization/TUMessagePackSerialization-Prefix.pch";
 				INFOPLIST_FILE = "TUMessagePackSerializationTests/TUMessagePackSerializationTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
