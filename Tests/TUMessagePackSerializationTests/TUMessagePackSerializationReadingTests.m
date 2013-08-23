@@ -11,11 +11,11 @@
 #import <TUMessagePackSerialization/TUMessagePackSerialization.h>
 
 
-@interface TUMessagePackSerializationTests : XCTestCase
+@interface TUMessagePackSerializationReadingTests : XCTestCase
 
 @end
 
-@implementation TUMessagePackSerializationTests
+@implementation TUMessagePackSerializationReadingTests
 
 - (void)setUp
 {

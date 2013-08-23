@@ -9,6 +9,7 @@
 #import "TUMessagePackSerialization.h"
 
 #import "TUMessagePackExtInfo.h"
+#import "NSNumber+TUMetaData.h"
 
 
 NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
@@ -439,6 +440,36 @@ return nil; \
 
 + (NSData *)dataWithMessagePackObject:(id)obj options:(TUMessagePackWritingOptions)opt error:(NSError **)error
 {
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        NSNumber *number = obj;
+        
+        if (number == (id)kCFBooleanTrue) {
+            uint8_t value = TUMessagePackTrue;
+            return [NSData dataWithBytes:&value length:1];
+        } else if (number == (id)kCFBooleanFalse) {
+            uint8_t value = TUMessagePackFalse;
+            return [NSData dataWithBytes:&value length:1];
+        } else if ([number isFloat]) {
+            
+        } else {
+            int64_t signedValue = number.longLongValue;
+            
+            if ([number isSigned] && signedValue < 0) {
+                if (signedValue > -pow(2, 5)) {
+                    int8_t value = signedValue;
+                    return [NSData dataWithBytes:&value length:sizeof(value)];
+                }
+            } else {
+                uint64_t unsignedValue = number.unsignedLongLongValue;
+                
+                if (unsignedValue < pow(2, 7)) {
+                    uint8_t value = unsignedValue;
+                    return [NSData dataWithBytes:&value length:sizeof(value)];
+                }
+            }
+        }
+    }
+    
     return nil;
 }
 
