@@ -37,7 +37,7 @@ typedef enum : uint8_t {
     TUMessagePackFalse = 0xC2,
     
     TUMessagePackFixstr = 0xA0,
-    TUMessagePackStr8 = 0xD9 ,
+    TUMessagePackStr8 = 0xD9,
     TUMessagePackStr16 = 0xDA,
     TUMessagePackStr32 = 0xDB,
     
@@ -438,11 +438,15 @@ return nil; \
 
 #pragma mark - Writing
 
+#define AddVar(var, position) do { \
+__typeof(var) value = var; \
+memcpy(data + position, &value, sizeof(var)); \
+} while(false);
+
 #define ReturnDataWithNumber(code, rawValue) do { \
 void *data = malloc(1 + sizeof(rawValue)); \
 memset(data, code, 1); \
-__typeof(rawValue) value = rawValue; \
-memcpy(data + 1, &value, sizeof(rawValue)); \
+AddVar(rawValue, 1); \
 return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
 } while(false);
 
@@ -499,6 +503,42 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
     } else if ([obj isKindOfClass:[NSNull class]]) {
         uint8_t value = TUMessagePackNil;
         return [NSData dataWithBytes:&value length:1];
+    } else if ([obj isKindOfClass:[NSString class]]) {
+        const char *utfData = [(NSString *)obj UTF8String];
+        NSUInteger length = strlen(utfData);
+        
+        if (length < 32) {
+            void *data = malloc(1 + length);
+            
+            memset(data, TUMessagePackFixstr | length, 1);
+            memcpy(data + 1, utfData, length);
+            
+            return [NSData dataWithBytesNoCopy:data length:1 + length];
+        } else if (length < pow(2, 1 * 8) && !(opt & TUMessagePackWritingCompatabilityMode)) {
+            void *data = malloc(1 + 1 + length);
+            
+            memset(data, TUMessagePackStr8, 1);
+            AddVar((uint8_t)length, 1);
+            memcpy(data + 1 + 1, utfData, length);
+            
+            return [NSData dataWithBytesNoCopy:data length:1 + 1 + length];
+        } else if (length < pow(2, 2 * 8)) {
+            void *data = malloc(1 + 2 + length);
+            
+            memset(data, TUMessagePackStr16, 1);
+            AddVar(CFSwapInt16HostToBig(length), 1);
+            memcpy(data + 1 + 2, utfData, length);
+            
+            return [NSData dataWithBytesNoCopy:data length:1 + 2 + length];
+        } else if (length < pow(2, 4 * 8)) {
+            void *data = malloc(1 + 4 + length);
+            
+            memset(data, TUMessagePackStr32, 1);
+            AddVar(CFSwapInt32HostToBig(length), 1);
+            memcpy(data + 1 + 4, utfData, length);
+            
+            return [NSData dataWithBytesNoCopy:data length:1 + 4 + length];
+        }
     }
     
     return nil;

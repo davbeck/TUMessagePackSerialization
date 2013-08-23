@@ -38,7 +38,7 @@
     
     XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
-    XCTAssertEqualObjects(result, expectedData, @"%@ value incorrect (%@)", testType, result);
+    XCTAssertEqualObjects(result, expectedData, @"%@ value incorrect", testType);
     
     if (additionalTests != nil) {
         additionalTests(result);
@@ -138,6 +138,28 @@
 - (void)testNil
 {
     [self _testWritingWithValue:[NSNull null] type:@"Nil"];
+}
+
+
+#pragma mark - Strings
+
+- (void)testFixstr
+{
+    [self _testWritingWithValue:@"test" type:@"Fixstr"];
+}
+
+// Str8 reading test will go here when we can create the test file some how
+
+- (void)testStr16
+{
+    [self _testWritingWithValue:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus aliquet augue a scelerisque. Ut viverra velit nisl, sit amet convallis arcu iaculis id. Curabitur semper, nibh ut ornare hendrerit, orci massa facilisis velit, eget tincidunt enim velit non tellus. Class aptent taciti sociosqu ad litora torquent metus." type:@"Str16"];
+}
+
+- (void)testStr32
+{
+    NSString *testString = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"] encoding:NSUTF8StringEncoding error:NULL];
+    
+    [self _testWritingWithValue:testString type:@"Str32"];
 }
 
 @end
