@@ -438,7 +438,7 @@ return nil; \
 
 #pragma mark - Writing
 
-#define ReturnDataWithUnsignedInt(code, unsignedValue) do { \
+#define ReturnDataWithInt(code, unsignedValue) do { \
 void *data = malloc(1 + sizeof(unsignedValue)); \
 memset(data, code, 1); \
 __typeof(unsignedValue) value = unsignedValue; \
@@ -463,9 +463,22 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
             int64_t signedValue = number.longLongValue;
             
             if ([number isSigned] && signedValue < 0) {
+                NSLog(@"pow(2, 4 * 7): %f", -pow(2, 4 * 8 - 1));
+                NSLog(@"min: %d", INT_MIN);
+                NSLog(@"max: %d", INT32_MIN);
+                
+                
                 if (signedValue > -pow(2, 5)) {
                     int8_t value = signedValue;
                     return [NSData dataWithBytes:&value length:sizeof(value)];
+                } else if (signedValue > -pow(2, 1 * 8 - 1)) {
+                    ReturnDataWithInt(TUMessagePackInt8, (int8_t)signedValue);
+                } else if (signedValue > -pow(2, 2 * 8 - 1)) {
+                    ReturnDataWithInt(TUMessagePackInt16, CFSwapInt16HostToBig(signedValue));
+                } else if (signedValue > -pow(2, 4 * 8 - 1)) {
+                    ReturnDataWithInt(TUMessagePackInt32, CFSwapInt32HostToBig(signedValue));
+                } else if (signedValue > -pow(2, 8 * 8 - 1)) {
+                    ReturnDataWithInt(TUMessagePackInt64, CFSwapInt64HostToBig(signedValue));
                 }
             } else {
                 uint64_t unsignedValue = number.unsignedLongLongValue;
@@ -474,13 +487,13 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
                     uint8_t value = unsignedValue;
                     return [NSData dataWithBytes:&value length:1];
                 } else if (unsignedValue < pow(2, 1 * 8)) {
-                    ReturnDataWithUnsignedInt(TUMessagePackUInt8, (uint8_t)unsignedValue);
+                    ReturnDataWithInt(TUMessagePackUInt8, (uint8_t)unsignedValue);
                 } else if (unsignedValue < pow(2, 2 * 8)) {
-                    ReturnDataWithUnsignedInt(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
+                    ReturnDataWithInt(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
                 } else if (unsignedValue < pow(2, 4 * 8)) {
-                    ReturnDataWithUnsignedInt(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
+                    ReturnDataWithInt(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
                 } else if (unsignedValue < pow(2, 8 * 8)) {
-                    ReturnDataWithUnsignedInt(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
+                    ReturnDataWithInt(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
                 }
             }
         }

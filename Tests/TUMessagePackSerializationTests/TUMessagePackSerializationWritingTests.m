@@ -53,12 +53,12 @@
 
 #pragma mark - Fixint
 
-- (void)testPositiveFixintWriting
+- (void)testPositiveFixint
 {
     [self _testWritingWithValue:@42 type:@"PositiveFixint"];
 }
 
-- (void)testNegativeFixintWriting
+- (void)testNegativeFixint
 {
     [self _testWritingWithValue:@-28 type:@"NegativeFixint"];
 }
@@ -66,35 +66,58 @@
 
 #pragma mark - UInt
 
-- (void)testUInt8Writing
+- (void)testUInt8
 {
     [self _testWritingWithValue:@250 type:@"UInt8"];
 }
 
-- (void)testUInt16Writing
+- (void)testUInt16
 {
     [self _testWritingWithValue:@48516 type:@"UInt16"];
 }
 
-- (void)testUInt32Writing
+- (void)testUInt32
 {
     [self _testWritingWithValue:@1299962209 type:@"UInt32"];
 }
 
-- (void)testUInt64Writing
+- (void)testUInt64
 {
     [self _testWritingWithValue:@6223172016852725913 type:@"UInt64"];
 }
 
 
+#pragma mark - Int
+
+- (void)testInt8
+{
+    [self _testWritingWithValue:@-100 type:@"Int8"];
+}
+
+- (void)testInt16
+{
+    [self _testWritingWithValue:@-200 type:@"Int16"];
+}
+
+- (void)testInt32
+{
+    [self _testWritingWithValue:@-1299962209 type:@"Int32"];
+}
+
+- (void)testInt64
+{
+    [self _testWritingWithValue:@-6223172016852725913 type:@"Int64"];
+}
+
+
 #pragma mark - Bool
 
-- (void)testPositiveTrueWriting
+- (void)testPositiveTrue
 {
     [self _testWritingWithValue:@YES type:@"True"];
 }
 
-- (void)testPositiveFalseWriting
+- (void)testPositiveFalse
 {
     [self _testWritingWithValue:@NO type:@"False"];
 }
@@ -102,7 +125,7 @@
 
 #pragma mark - Nil
 
-- (void)testNilWriting
+- (void)testNil
 {
     [self _testWritingWithValue:[NSNull null] type:@"Nil"];
 }
