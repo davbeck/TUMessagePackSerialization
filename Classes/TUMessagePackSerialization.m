@@ -438,12 +438,12 @@ return nil; \
 
 #pragma mark - Writing
 
-#define ReturnDataWithInt(code, unsignedValue) do { \
-void *data = malloc(1 + sizeof(unsignedValue)); \
+#define ReturnDataWithNumber(code, rawValue) do { \
+void *data = malloc(1 + sizeof(rawValue)); \
 memset(data, code, 1); \
-__typeof(unsignedValue) value = unsignedValue; \
-memcpy(data + 1, &value, sizeof(unsignedValue)); \
-return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
+__typeof(rawValue) value = rawValue; \
+memcpy(data + 1, &value, sizeof(rawValue)); \
+return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
 } while(false);
 
 + (NSData *)dataWithMessagePackObject:(id)obj options:(TUMessagePackWritingOptions)opt error:(NSError **)error
@@ -458,7 +458,11 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
             uint8_t value = TUMessagePackFalse;
             return [NSData dataWithBytes:&value length:1];
         } else if ([number isFloat]) {
-            
+            if (strcmp(number.objCType, @encode(double)) == 0) {
+                ReturnDataWithNumber(TUMessagePackDouble, CFConvertFloat64HostToSwapped(number.doubleValue));
+            } else {
+                ReturnDataWithNumber(TUMessagePackFloat, CFConvertFloat32HostToSwapped(number.floatValue));
+            }
         } else {
             int64_t signedValue = number.longLongValue;
             
@@ -467,13 +471,13 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
                     int8_t value = signedValue;
                     return [NSData dataWithBytes:&value length:sizeof(value)];
                 } else if (signedValue > -pow(2, 1 * 8 - 1)) {
-                    ReturnDataWithInt(TUMessagePackInt8, (int8_t)signedValue);
+                    ReturnDataWithNumber(TUMessagePackInt8, (int8_t)signedValue);
                 } else if (signedValue > -pow(2, 2 * 8 - 1)) {
-                    ReturnDataWithInt(TUMessagePackInt16, CFSwapInt16HostToBig(signedValue));
+                    ReturnDataWithNumber(TUMessagePackInt16, CFSwapInt16HostToBig(signedValue));
                 } else if (signedValue > -pow(2, 4 * 8 - 1)) {
-                    ReturnDataWithInt(TUMessagePackInt32, CFSwapInt32HostToBig(signedValue));
+                    ReturnDataWithNumber(TUMessagePackInt32, CFSwapInt32HostToBig(signedValue));
                 } else if (signedValue > -pow(2, 8 * 8 - 1)) {
-                    ReturnDataWithInt(TUMessagePackInt64, CFSwapInt64HostToBig(signedValue));
+                    ReturnDataWithNumber(TUMessagePackInt64, CFSwapInt64HostToBig(signedValue));
                 }
             } else {
                 uint64_t unsignedValue = number.unsignedLongLongValue;
@@ -482,13 +486,13 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(unsignedValue)]; \
                     uint8_t value = unsignedValue;
                     return [NSData dataWithBytes:&value length:1];
                 } else if (unsignedValue < pow(2, 1 * 8)) {
-                    ReturnDataWithInt(TUMessagePackUInt8, (uint8_t)unsignedValue);
+                    ReturnDataWithNumber(TUMessagePackUInt8, (uint8_t)unsignedValue);
                 } else if (unsignedValue < pow(2, 2 * 8)) {
-                    ReturnDataWithInt(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
+                    ReturnDataWithNumber(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
                 } else if (unsignedValue < pow(2, 4 * 8)) {
-                    ReturnDataWithInt(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
+                    ReturnDataWithNumber(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
                 } else if (unsignedValue < pow(2, 8 * 8)) {
-                    ReturnDataWithInt(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
+                    ReturnDataWithNumber(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
                 }
             }
         }

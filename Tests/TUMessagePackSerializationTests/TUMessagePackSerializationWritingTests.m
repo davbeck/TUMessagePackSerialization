@@ -110,6 +110,16 @@
 }
 
 
+#pragma mark - Floating point
+
+// float reading test will go here when we can create the test file some how
+
+- (void)testDouble
+{
+    [self _testWritingWithValue:@5672562398523.6523 type:@"Double"];
+}
+
+
 #pragma mark - Bool
 
 - (void)testPositiveTrue
