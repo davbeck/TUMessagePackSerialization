@@ -468,6 +468,9 @@ return nil; \
                 }
             }
         }
+    } else if ([obj isKindOfClass:[NSNull class]]) {
+        uint8_t value = TUMessagePackNil;
+        return [NSData dataWithBytes:&value length:1];
     }
     
     return nil;

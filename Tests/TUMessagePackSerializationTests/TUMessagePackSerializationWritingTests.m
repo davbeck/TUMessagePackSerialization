@@ -76,4 +76,12 @@
     [self _testWritingWithValue:@NO type:@"False"];
 }
 
+
+#pragma mark - Nil
+
+- (void)testNilWriting
+{
+    [self _testWritingWithValue:[NSNull null] type:@"Nil"];
+}
+
 @end
