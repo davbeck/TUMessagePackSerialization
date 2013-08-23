@@ -1,0 +1,14 @@
+PODS:
+  - TUMessagePackSerialization (0.1.0)
+
+DEPENDENCIES:
+  - TUMessagePackSerialization (from `../`)
+
+EXTERNAL SOURCES:
+  TUMessagePackSerialization:
+    :path: ../
+
+SPEC CHECKSUMS:
+  TUMessagePackSerialization: 56254a86302324ccc88003a1a8b48bf4bc4908e1
+
+COCOAPODS: 0.23.0
