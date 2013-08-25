@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  TUMessagePackSerialization: 56254a86302324ccc88003a1a8b48bf4bc4908e1
+  TUMessagePackSerialization: 35fbbc9df1c1bf8af3fa984344ab593db086d4ff
 
 COCOAPODS: 0.23.0

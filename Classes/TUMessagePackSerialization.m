@@ -565,6 +565,16 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
         } else if (array.count < pow(2, 4 * 8)) {
             return [self _mpDataWithArray:array code:TUMessagePackArray32 lengthBytes:4];
         }
+    } else if ([obj isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dictionary = obj;
+        
+        if (dictionary.count < 16) {
+            return [self _mpDataWithDictionary:dictionary code:TUMessagePackFixmap | (uint8_t)dictionary.count lengthBytes:0];
+        } else if (dictionary.count < pow(2, 2 * 8)) {
+            return [self _mpDataWithDictionary:dictionary code:TUMessagePackMap16 lengthBytes:2];
+        } else if (dictionary.count < pow(2, 4 * 8)) {
+            return [self _mpDataWithDictionary:dictionary code:TUMessagePackMap32 lengthBytes:4];
+        }
     }
     
     
@@ -637,6 +647,46 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
             [data appendData:objectData];
         }
     }
+    
+    return data;
+}
+
+- (NSData *)_mpDataWithDictionary:(NSDictionary *)dictionary code:(TUMessagePackCode)code lengthBytes:(NSUInteger)lengthBytes
+{
+    NSMutableData *data = [[NSMutableData alloc] init];
+    
+    [data appendBytes:&code length:1];
+    
+    switch (lengthBytes) {
+        case 1: {
+            uint8_t length = dictionary.count;
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        } case 2: {
+            uint16_t length = CFSwapInt16HostToBig(dictionary.count);
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        } case 4: {
+            uint32_t length = CFSwapInt32HostToBig(dictionary.count);
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        }
+    }
+    
+    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSData *keyData = [self _mpDataWithObject:key];
+        NSData *objData = [self _mpDataWithObject:obj];
+        
+        if (objData != nil && keyData != nil && _error == nil) {
+            [data appendData:keyData];
+            [data appendData:objData];
+        } else {
+            *stop = YES;
+        }
+    }];
     
     return data;
 }

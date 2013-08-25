@@ -195,4 +195,37 @@
     [self _testWritingWithValue:testArray type:@"Array32"];
 }
 
+
+#pragma mark - Map (Dictionary)
+
+- (void)testFixMap
+{
+    NSMutableDictionary *testMap = [[TUOrderedMap alloc] initWithCapacity:3];
+    testMap[@"key"] = @"value";
+    testMap[@"one"] = @1;
+    testMap[@"float"] = @2.8;
+    
+    [self _testWritingWithValue:testMap type:@"Fixmap"];
+}
+
+- (void)testMap16
+{
+    NSMutableDictionary *testMap = [[TUOrderedMap alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 200; i++) {
+        testMap[@(i)] = @(i + 100);
+    }
+    
+    [self _testWritingWithValue:testMap type:@"Map16"];
+}
+
+- (void)testMap32
+{
+    NSMutableDictionary *testMap = [[TUOrderedMap alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 82590; i++) {
+        testMap[@(i)] = @(i + 100);
+    }
+    
+    [self _testWritingWithValue:testMap type:@"Map32"];
+}
+
 @end
