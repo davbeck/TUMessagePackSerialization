@@ -162,4 +162,37 @@
     [self _testWritingWithValue:testString type:@"Str32"];
 }
 
+
+#pragma mark - Bin
+
+// Bin8|16|32 reading test will go here when we can create the test file some how
+
+
+#pragma mark - Array
+
+- (void)testFixarray
+{
+    [self _testWritingWithValue:@[@1, @"b", @3.5] type:@"Fixarray"];
+}
+
+- (void)testArray16
+{
+    NSMutableArray *testArray = [[NSMutableArray alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 200; i++) {
+        [testArray addObject:@(i)];
+    }
+    
+    [self _testWritingWithValue:testArray type:@"Array16"];
+}
+
+- (void)testArray32
+{
+    NSMutableArray *testArray = [[NSMutableArray alloc] initWithCapacity:82590];
+    for (NSUInteger i = 1; i <= 82590; i++) {
+        [testArray addObject:@(i)];
+    }
+    
+    [self _testWritingWithValue:testArray type:@"Array32"];
+}
+
 @end

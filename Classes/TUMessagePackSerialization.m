@@ -78,7 +78,8 @@ return nil; \
 {
     NSUInteger _position;
     NSData *_data;
-    TUMessagePackReadingOptions _options;
+    TUMessagePackReadingOptions _readingOptions;
+    TUMessagePackWritingOptions _writingOptions;
     NSError *_error;
 }
 
@@ -109,7 +110,7 @@ return nil; \
 
 - (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
-    _options = opt;
+    _readingOptions = opt;
     _data = data;
     _position = 0;
     
@@ -177,7 +178,7 @@ return nil; \
         }
             
         case TUMessagePackNil: {
-            if ((_options & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
+            if ((_readingOptions & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
                 // the one case where returning nil is not an error
                 return nil;
             } else {
@@ -219,7 +220,7 @@ return nil; \
             
             uint8_t length = TUPopVar(uint8_t);
             object = [self _popData:length];
-            if (_options & TUMessagePackReadingMutableLeaves) {
+            if (_readingOptions & TUMessagePackReadingMutableLeaves) {
                 object = [object mutableCopy];
             }
             
@@ -229,7 +230,7 @@ return nil; \
             
             uint16_t length = CFSwapInt16BigToHost(TUPopVar(uint16_t));
             object = [self _popData:length];
-            if (_options & TUMessagePackReadingMutableLeaves) {
+            if (_readingOptions & TUMessagePackReadingMutableLeaves) {
                 object = [object mutableCopy];
             }
             
@@ -239,7 +240,7 @@ return nil; \
             
             uint32_t length = CFSwapInt32BigToHost(TUPopVar(uint32_t));
             object = [self _popData:length];
-            if (_options & TUMessagePackReadingMutableLeaves) {
+            if (_readingOptions & TUMessagePackReadingMutableLeaves) {
                 object = [object mutableCopy];
             }
             
@@ -365,14 +366,14 @@ return nil; \
 {
     NSData *stringData = [self _popData:length];
     
-    if (_options & TUMessagePackReadingStringsAsData) {
-        if (_options & TUMessagePackReadingMutableLeaves) {
+    if (_readingOptions & TUMessagePackReadingStringsAsData) {
+        if (_readingOptions & TUMessagePackReadingMutableLeaves) {
             return [stringData mutableCopy];
         } else {
             return stringData;
         }
     } else {
-        if (_options & TUMessagePackReadingMutableLeaves) {
+        if (_readingOptions & TUMessagePackReadingMutableLeaves) {
             return [[NSMutableString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
         } else {
             return [[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding];
@@ -450,7 +451,28 @@ AddVar(rawValue, 1); \
 return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
 } while(false);
 
+
 + (NSData *)dataWithMessagePackObject:(id)obj options:(TUMessagePackWritingOptions)opt error:(NSError **)error
+{
+    TUMessagePackSerialization *serialization = [[TUMessagePackSerialization alloc] init];
+    
+    return [serialization _dataWithMessagePackObject:obj options:opt error:error];
+}
+
+- (NSData *)_dataWithMessagePackObject:(id)obj options:(TUMessagePackWritingOptions)opt error:(NSError **)error
+{
+    _writingOptions = opt;
+    
+    NSData *data = [self _mpDataWithObject:obj];
+    
+    if (_error != nil && error != NULL) {
+        *error = _error;
+    }
+    
+    return data;
+}
+
+- (NSData *)_mpDataWithObject:(id)obj
 {
     if ([obj isKindOfClass:[NSNumber class]]) {
         NSNumber *number = obj;
@@ -508,7 +530,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
         
         if (data.length < 32) {
             return [self _mpDataWithData:data code:TUMessagePackFixstr | data.length lengthBytes:0];
-        } else if (data.length < pow(2, 1 * 8) && !(opt & TUMessagePackWritingCompatabilityMode)) {
+        } else if (data.length < pow(2, 1 * 8) && !(_writingOptions & TUMessagePackWritingCompatabilityMode)) {
             return [self _mpDataWithData:data code:TUMessagePackStr8 lengthBytes:1];
         } else if (data.length < pow(2, 2 * 8)) {
             return [self _mpDataWithData:data code:TUMessagePackStr16 lengthBytes:2];
@@ -518,7 +540,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
     } else if ([obj isKindOfClass:[NSData class]]) {
         NSData *data = obj;
         
-        if (opt & TUMessagePackWritingCompatabilityMode) {
+        if (_writingOptions & TUMessagePackWritingCompatabilityMode) {
             if (data.length < pow(2, 2 * 8)) {
                 return [self _mpDataWithData:data code:TUMessagePackStr16 lengthBytes:2];
             } else if (data.length < pow(2, 4 * 8)) {
@@ -533,17 +555,27 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
                 return [self _mpDataWithData:data code:TUMessagePackBin32 lengthBytes:4];
             }
         }
+    } else if ([obj isKindOfClass:[NSArray class]]) {
+        NSArray *array = obj;
+        
+        if (array.count < 16) {
+            return [self _mpDataWithArray:array code:TUMessagePackFixarray | (uint8_t)array.count lengthBytes:0];
+        } else if (array.count < pow(2, 2 * 8)) {
+            return [self _mpDataWithArray:array code:TUMessagePackArray16 lengthBytes:2];
+        } else if (array.count < pow(2, 4 * 8)) {
+            return [self _mpDataWithArray:array code:TUMessagePackArray32 lengthBytes:4];
+        }
     }
     
     
-    if (error != NULL) {
-        *error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
+    if (_error == nil) {
+        _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNoMatchingFormatCode userInfo:nil];
     }
     
     return nil;
 }
 
-+ (NSData *)_mpDataWithData:(NSData *)data code:(TUMessagePackCode)code lengthBytes:(NSUInteger)lengthBytes
+- (NSData *)_mpDataWithData:(NSData *)data code:(TUMessagePackCode)code lengthBytes:(NSUInteger)lengthBytes
 {
     void *bytes = malloc(1 + lengthBytes + data.length);
     
@@ -571,6 +603,42 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
     memcpy(bytes + 1 + lengthBytes, data.bytes, data.length);
     
     return [NSData dataWithBytesNoCopy:bytes length:1 + lengthBytes + data.length];
+}
+
+- (NSData *)_mpDataWithArray:(NSArray *)array code:(TUMessagePackCode)code lengthBytes:(NSUInteger)lengthBytes
+{
+    NSMutableData *data = [[NSMutableData alloc] init];
+    
+    [data appendBytes:&code length:1];
+    
+    switch (lengthBytes) {
+        case 1: {
+            uint8_t length = array.count;
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        } case 2: {
+            uint16_t length = CFSwapInt16HostToBig(array.count);
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        } case 4: {
+            uint32_t length = CFSwapInt32HostToBig(array.count);
+            [data appendBytes:&length length:lengthBytes];
+            
+            break;
+        }
+    }
+    
+    for (id object in array) {
+        NSData *objectData = [self _mpDataWithObject:object];
+        
+        if (objectData != nil) {
+            [data appendData:objectData];
+        }
+    }
+    
+    return data;
 }
 
 + (BOOL)isValidMessagePackObject:(id)obj
