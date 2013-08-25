@@ -198,6 +198,8 @@
 
 #pragma mark - Map (Dictionary)
 
+// we use TUOrderedMap to test maps because NSDictionary would not preserve the order of keys and usually fail
+
 - (void)testFixMap
 {
     NSMutableDictionary *testMap = [[TUOrderedMap alloc] initWithCapacity:3];
@@ -226,6 +228,34 @@
     }
     
     [self _testWritingWithValue:testMap type:@"Map32"];
+}
+
+
+#pragma mark - Ext
+
+// Ext writing test will go here when we can create the test file some how
+
+
+#pragma mark - Test Twitter
+
+// this is our 'real world' test that brings it all together
+- (void)testTwitter
+{
+    // we feed the rsulting data back into the serializer rather than comparing it to set data because NSDictionary from the json file will not preserve the order
+    
+    NSData *twitterData = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"Twitter" withExtension:@"json"]];
+    id twitter = [NSJSONSerialization JSONObjectWithData:twitterData options:0 error:NULL];
+    
+    NSError *error = nil;
+    NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:twitter options:0 error:&error];
+    
+    XCTAssertNil(error, @"Error writing Twitter: %@", error);
+    
+    id object = [TUMessagePackSerialization messagePackObjectWithData:result options:0 error:&error];
+    
+    XCTAssertNil(error, @"Error reading written Twitter: %@", error);
+    
+    XCTAssertEqualObjects(twitter, object, @"Twitter value incorrect");
 }
 
 @end
