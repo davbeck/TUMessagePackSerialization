@@ -371,21 +371,21 @@ typedef enum : uint8_t {
 - (id)_popString:(NSUInteger)length
 {
     __block id object;
-    [self _popBytes:length block:^(const void *stringBytes) {
-        if (_readingOptions & TUMessagePackReadingStringsAsData) {
-            if (_readingOptions & TUMessagePackReadingMutableLeaves) {
-                object = [NSMutableData dataWithBytes:stringBytes length:length];
-            } else {
-                object = [NSData dataWithBytes:stringBytes length:length];
-            }
-        } else {
-            if (_readingOptions & TUMessagePackReadingMutableLeaves) {
-                object = [[NSMutableString alloc] initWithBytes:stringBytes length:length encoding:NSUTF8StringEncoding];
-            } else {
+    if ((_readingOptions & TUMessagePackReadingStringsAsData) != TUMessagePackReadingStringsAsData) {
+        [self _popBytes:length block:^(const void *stringBytes) {
+            if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
                 object = [[NSString alloc] initWithBytes:stringBytes length:length encoding:NSUTF8StringEncoding];
+            } else {
+                object = [[NSMutableString alloc] initWithBytes:stringBytes length:length encoding:NSUTF8StringEncoding];
             }
+        }];
+    } else {
+        if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
+            object = [self _popData:length];
+        } else {
+            object = [[self _popData:length] mutableCopy];
         }
-    }];
+    }
     
     return object;
 }
