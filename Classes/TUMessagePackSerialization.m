@@ -67,6 +67,7 @@ typedef enum : uint8_t {
 @implementation TUMessagePackSerialization
 {
     NSUInteger _position;
+    const void *_bytes;
     NSData *_data;
     TUMessagePackReadingOptions _readingOptions;
     TUMessagePackWritingOptions _writingOptions;
@@ -102,6 +103,7 @@ typedef enum : uint8_t {
 {
     _readingOptions = opt;
     _data = data;
+    _bytes = _data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
     _position = 0;
     
     id object = [self _popObject];
@@ -346,7 +348,7 @@ typedef enum : uint8_t {
 {
     if (_data.length >= _position + length) {
         // note that this could be called again within the block so we need to incriment position before calling the block
-        const void *bytes = _data.bytes + _position;
+        const void *bytes = _bytes + _position;
         _position += length;
         block(bytes);
     } else {
