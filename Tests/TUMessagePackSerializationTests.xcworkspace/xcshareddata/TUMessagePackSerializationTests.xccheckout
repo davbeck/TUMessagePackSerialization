@@ -5,19 +5,19 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>22FEA135-5E97-4A81-BA30-B57D5F5B0CE8</string>
+	<string>D63F5623-D271-4A6D-AF8E-34586058CDB5</string>
 	<key>IDESourceControlProjectName</key>
 	<string>TUMessagePackSerializationTests</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>CC409543-B6E1-47CD-B1BD-3002210A2C15</key>
+		<key>733585A6-D902-4ED8-8EA1-8B82D269215A</key>
 		<string>ssh://github.com/davbeck/TUMessagePackSerialization.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Tests/TUMessagePackSerializationTests.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>CC409543-B6E1-47CD-B1BD-3002210A2C15</key>
+		<key>733585A6-D902-4ED8-8EA1-8B82D269215A</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>CC409543-B6E1-47CD-B1BD-3002210A2C15</string>
+	<string>733585A6-D902-4ED8-8EA1-8B82D269215A</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>CC409543-B6E1-47CD-B1BD-3002210A2C15</string>
+			<string>733585A6-D902-4ED8-8EA1-8B82D269215A</string>
 			<key>IDESourceControlWCCName</key>
 			<string>TUMessagePackSerialization</string>
 		</dict>

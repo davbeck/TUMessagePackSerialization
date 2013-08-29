@@ -126,56 +126,56 @@ typedef enum : uint8_t {
         switch (code) {
             case TUMessagePackUInt8: {
                 [self _popBytes:sizeof(uint8_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithUnsignedChar:*(uint8_t *)bytes];
+                    object = [[NSNumber alloc] initWithUnsignedChar:*(uint8_t *)bytes];
                 }];
                 break;
             } case TUMessagePackUInt16: {
                 [self _popBytes:sizeof(uint16_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithUnsignedShort:CFSwapInt16BigToHost(*(uint16_t *)bytes)];
+                    object = [[NSNumber alloc] initWithUnsignedShort:CFSwapInt16BigToHost(*(uint16_t *)bytes)];
                 }];
                 break;
             } case TUMessagePackUInt32: {
                 [self _popBytes:sizeof(uint32_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithUnsignedLong:CFSwapInt32BigToHost(*(uint32_t *)bytes)];
+                    object = [[NSNumber alloc] initWithUnsignedLong:CFSwapInt32BigToHost(*(uint32_t *)bytes)];
                 }];
                 break;
             } case TUMessagePackUInt64: {
                 [self _popBytes:sizeof(uint64_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithUnsignedLongLong:CFSwapInt64BigToHost(*(uint64_t *)bytes)];
+                    object = [[NSNumber alloc] initWithUnsignedLongLong:CFSwapInt64BigToHost(*(uint64_t *)bytes)];
                 }];
                 break;
             }
                 
             case TUMessagePackInt8: {
                 [self _popBytes:sizeof(uint8_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithChar:*(uint8_t *)bytes];
+                    object = [[NSNumber alloc] initWithChar:*(uint8_t *)bytes];
                 }];
                 break;
             } case TUMessagePackInt16: {
                 [self _popBytes:sizeof(uint16_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithShort:CFSwapInt16BigToHost(*(uint16_t *)bytes)];
+                    object = [[NSNumber alloc] initWithShort:CFSwapInt16BigToHost(*(uint16_t *)bytes)];
                 }];
                 break;
             } case TUMessagePackInt32: {
                 [self _popBytes:sizeof(uint32_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithLong:CFSwapInt32BigToHost(*(uint32_t *)bytes)];
+                    object = [[NSNumber alloc] initWithLong:CFSwapInt32BigToHost(*(uint32_t *)bytes)];
                 }];
                 break;
             } case TUMessagePackInt64: {
                 [self _popBytes:sizeof(uint64_t) block:^(const void *bytes) {
-                    object = [NSNumber numberWithLongLong:CFSwapInt64BigToHost(*(uint64_t *)bytes)];
+                    object = [[NSNumber alloc] initWithLongLong:CFSwapInt64BigToHost(*(uint64_t *)bytes)];
                 }];
                 break;
             }
                 
             case TUMessagePackFloat: {
                 [self _popBytes:sizeof(CFSwappedFloat32) block:^(const void *bytes) {
-                    object = [NSNumber numberWithFloat:CFConvertFloatSwappedToHost(*(CFSwappedFloat32 *)bytes)];
+                    object = [[NSNumber alloc] initWithFloat:CFConvertFloatSwappedToHost(*(CFSwappedFloat32 *)bytes)];
                 }];
                 break;
             } case TUMessagePackDouble: {
                 [self _popBytes:sizeof(CFSwappedFloat64) block:^(const void *bytes) {
-                    object = [NSNumber numberWithDouble:CFConvertDoubleSwappedToHost(*(CFSwappedFloat64 *)bytes)];
+                    object = [[NSNumber alloc] initWithDouble:CFConvertDoubleSwappedToHost(*(CFSwappedFloat64 *)bytes)];
                 }];
                 break;
             }
@@ -320,9 +320,9 @@ typedef enum : uint8_t {
                 
             default: {
                 if (!(code & 0b10000000)) {
-                    object = [NSNumber numberWithUnsignedChar:code];
+                    object = [[NSNumber alloc] initWithUnsignedChar:code];
                 } else if ((code & 0b11100000) == TUMessagePackNegativeFixint) {
-                    object = [NSNumber numberWithChar:code];
+                    object = [[NSNumber alloc] initWithChar:code];
                 } else if ((code & 0b11100000) == TUMessagePackFixstr) {
                     uint8_t length = code & ~0b11100000;
                     object = [self _popString:length];
