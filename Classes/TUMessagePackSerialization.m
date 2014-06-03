@@ -376,12 +376,13 @@ inline double _popFloat64(TUMessagePackSerialization *self)
 
 - (NSData *)_popData:(NSUInteger)length
 {
-    //    if (_data.length >= _position + length) {
-    //        NSData *data = [_data subdataWithRange:NSMakeRange(_position, length)];
-    //        _position += length;
-    //
-    //        return data;
-    //    }
+    if ([self _popBytes:length]) {
+        if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
+            return [[NSData alloc] initWithBytes:_bytes length:length];
+        } else {
+            return [[NSMutableData alloc] initWithBytes:_bytes length:length];
+        }
+    }
     
     return nil;
 }
