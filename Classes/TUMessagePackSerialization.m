@@ -216,16 +216,16 @@ inline double _popFloat64(TUMessagePackSerialization *self)
         }
             
         case TUMessagePackInt8: {
-            object = [[NSNumber alloc] initWithChar:_popInt8(self)];
+            object = [[NSNumber alloc] initWithChar:(int8_t)_popInt8(self)];
             break;
         } case TUMessagePackInt16: {
-            object = [[NSNumber alloc] initWithShort:_popInt16(self)];
+            object = [[NSNumber alloc] initWithShort:(int16_t)_popInt16(self)];
             break;
         } case TUMessagePackInt32: {
-            object = [[NSNumber alloc] initWithLong:_popInt32(self)];
+            object = [[NSNumber alloc] initWithLong:(int32_t)_popInt32(self)];
             break;
         } case TUMessagePackInt64: {
-            object = [[NSNumber alloc] initWithLongLong:_popInt64(self)];
+            object = [[NSNumber alloc] initWithLongLong:(int64_t)_popInt64(self)];
             break;
         }
             
@@ -410,7 +410,8 @@ inline double _popFloat64(TUMessagePackSerialization *self)
 
 - (id)_popArray:(NSUInteger)length
 {
-    id __unsafe_unretained *objects = (id __unsafe_unretained *)alloca(sizeof(id) * length);
+//    id __unsafe_unretained *objects = (id __unsafe_unretained *)alloca(sizeof(id) * length);
+    id objects[length];
     
     NSUInteger count = 0;
     for (NSUInteger index = 0; index < length; index++) {
@@ -531,7 +532,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
                 } else if (signedValue > -pow(2, 2 * 8 - 1)) {
                     ReturnDataWithNumber(TUMessagePackInt16, CFSwapInt16HostToBig(signedValue));
                 } else if (signedValue > -pow(2, 4 * 8 - 1)) {
-                    ReturnDataWithNumber(TUMessagePackInt32, CFSwapInt32HostToBig(signedValue));
+                    ReturnDataWithNumber(TUMessagePackInt32, CFSwapInt32HostToBig((int32_t)signedValue));
                 } else if (signedValue > -pow(2, 8 * 8 - 1)) {
                     ReturnDataWithNumber(TUMessagePackInt64, CFSwapInt64HostToBig(signedValue));
                 }
@@ -546,7 +547,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
                 } else if (unsignedValue < pow(2, 2 * 8)) {
                     ReturnDataWithNumber(TUMessagePackUInt16, CFSwapInt16HostToBig(unsignedValue));
                 } else if (unsignedValue < pow(2, 4 * 8)) {
-                    ReturnDataWithNumber(TUMessagePackUInt32, CFSwapInt32HostToBig(unsignedValue));
+                    ReturnDataWithNumber(TUMessagePackUInt32, CFSwapInt32HostToBig((uint32_t)unsignedValue));
                 } else if (unsignedValue < pow(2, 8 * 8)) {
                     ReturnDataWithNumber(TUMessagePackUInt64, CFSwapInt64HostToBig(unsignedValue));
                 }
@@ -633,7 +634,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
             
             break;
         } case 4: {
-            uint32_t length = CFSwapInt32HostToBig(data.length);
+            uint32_t length = CFSwapInt32HostToBig((uint32_t)data.length);
             memcpy(bytes + 1, &length, lengthBytes);
             
             break;
@@ -663,7 +664,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
             
             break;
         } case 4: {
-            uint32_t length = CFSwapInt32HostToBig(array.count);
+            uint32_t length = CFSwapInt32HostToBig((uint32_t)array.count);
             [data appendBytes:&length length:lengthBytes];
             
             break;
@@ -699,7 +700,7 @@ return [NSData dataWithBytesNoCopy:data length:1 + sizeof(rawValue)]; \
             
             break;
         } case 4: {
-            uint32_t length = CFSwapInt32HostToBig(dictionary.count);
+            uint32_t length = CFSwapInt32HostToBig((uint32_t)dictionary.count);
             [data appendBytes:&length length:lengthBytes];
             
             break;

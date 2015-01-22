@@ -31,7 +31,7 @@
     }
     
     NSTimeInterval timestamp = *(NSTimeInterval *)data.bytes;
-    return [NSDate dateWithTimeIntervalSince1970:timestamp];
+    return [self initWithTimeIntervalSince1970:timestamp];
 }
 
 
