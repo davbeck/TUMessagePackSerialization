@@ -66,6 +66,7 @@ typedef enum : uint8_t {
 typedef struct {
     const void *_bytes;
     NSUInteger _position;
+    NSUInteger _length;
     TUMessagePackReadingOptions _options;
     CFErrorRef _error; // no objc objects in structs :/
 } TUReadingInfo;
@@ -74,16 +75,15 @@ typedef struct {
 @interface TUMessagePackSerialization ()
 {
     @public
-    NSUInteger _lastLength;
-    NSUInteger _length;
     const void *_bytes;
-    NSData *_data;
+    NSUInteger _position;
+    NSUInteger _length;
     TUMessagePackReadingOptions _readingOptions;
     TUMessagePackWritingOptions _writingOptions;
     NSError *_error;
 }
 
-- (BOOL)_popBytes:(NSUInteger)length;
+- (BOOL)_popBytes:(void *)variable length:(NSUInteger)length;
 
 @end
 
@@ -91,61 +91,49 @@ typedef struct {
 extern inline uint8_t _popInt8(id self);
 inline uint8_t _popInt8(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(uint8_t)]) {
-        return *(uint8_t *)(self->_bytes);
-    }
-    
-    return 0;
+    uint8_t number = 0;
+    [self _popBytes:&number length:sizeof(number)];
+    return number;
 }
 
 extern inline uint16_t _popInt16(id self);
 inline uint16_t _popInt16(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(uint16_t)]) {
-        return CFSwapInt16BigToHost(*(uint16_t *)self->_bytes);
-    }
-    
-    return 0;
+    uint16_t number = 0;
+    [self _popBytes:&number length:sizeof(number)];
+    return CFSwapInt16BigToHost(number);
 }
 
 extern inline uint32_t _popInt32(id self);
 inline uint32_t _popInt32(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(uint32_t)]) {
-        return CFSwapInt32BigToHost(*(uint32_t *)self->_bytes);
-    }
-    
-    return 0;
+    uint32_t number = 0;
+    [self _popBytes:&number length:sizeof(number)];
+    return CFSwapInt32BigToHost(number);
 }
 
 extern inline uint64_t _popInt64(id self);
 inline uint64_t _popInt64(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(uint64_t)]) {
-        return CFSwapInt64BigToHost(*(uint64_t *)self->_bytes);
-    }
-    
-    return 0;
+    uint64_t number = 0;
+    [self _popBytes:&number length:sizeof(number)];
+    return CFSwapInt64BigToHost(number);
 }
 
 extern inline float _popFloat32(id self);
 inline float _popFloat32(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(CFSwappedFloat64)]) {
-        return CFConvertFloatSwappedToHost(*(CFSwappedFloat32 *)self->_bytes);
-    }
-    
-    return 0.0;
+    CFSwappedFloat32 number = {0};
+    [self _popBytes:&number length:sizeof(number)];
+    return CFConvertFloatSwappedToHost(number);
 }
 
 extern inline double _popFloat64(id self);
 inline double _popFloat64(TUMessagePackSerialization *self)
 {
-    if ([self _popBytes:sizeof(CFSwappedFloat64)]) {
-        return CFConvertDoubleSwappedToHost(*(CFSwappedFloat64 *)self->_bytes);
-    }
-    
-    return 0.0;
+    CFSwappedFloat64 number = {0};
+    [self _popBytes:&number length:sizeof(number)];
+    return CFConvertDoubleSwappedToHost(number);
 }
 
 
@@ -179,10 +167,9 @@ inline double _popFloat64(TUMessagePackSerialization *self)
 - (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
     _readingOptions = opt;
-    _data = data;
-    _bytes = _data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
-    _lastLength = 0;
-    _length = _data.length;
+    _bytes = data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
+    _position = 0;
+    _length = data.length;
     
     id object = [self _popObject];
     
@@ -255,10 +242,7 @@ inline double _popFloat64(TUMessagePackSerialization *self)
         }
             
         case TUMessagePackStr8: {
-            if ([self _popBytes:sizeof(uint8_t)]) {
-                uint8_t length = *(uint8_t *)_bytes;
-                object = [self _popString:length];
-            }
+            object = [self _popString:_popInt8(self)];
             break;
         } case TUMessagePackStr16: {
             object = [self _popString:_popInt16(self)];
@@ -360,49 +344,58 @@ inline double _popFloat64(TUMessagePackSerialization *self)
     return object;
 }
 
-- (BOOL)_popBytes:(NSUInteger)length
+- (BOOL)_popBytes:(void *)variable length:(NSUInteger)length
 {
-    if (_length >= _lastLength + length) {
-        _bytes += _lastLength;
-        _length -= _lastLength;
-        _lastLength = length;
+    if (_position + length <= _length) {
+        memcpy(variable, _bytes + _position, length);
+        _position += length;
         
         return YES;
     } else {
         _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNotEnoughData userInfo:nil];
+        
         return NO;
     }
 }
 
 - (NSData *)_popData:(NSUInteger)length
 {
-    if ([self _popBytes:length]) {
+    if (_position + length <= _length) {
+        NSData *data = nil;
+        
         if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
-            return [[NSData alloc] initWithBytes:_bytes length:length];
+            data = [[NSData alloc] initWithBytes:_bytes + _position length:length];
         } else {
-            return [[NSMutableData alloc] initWithBytes:_bytes length:length];
+            data = [[NSMutableData alloc] initWithBytes:_bytes + _position length:length];
         }
+        
+        _position += length;
+        return data;
     }
     
+    _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNotEnoughData userInfo:nil];
     return nil;
 }
 
 - (id)_popString:(NSUInteger)length
 {
     if ((_readingOptions & TUMessagePackReadingStringsAsData) != TUMessagePackReadingStringsAsData) {
-        if ([self _popBytes:length]) {
+        if (_position + length <= _length) {
+            NSString *string = nil;
+            
             if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
-                return [[NSString alloc] initWithBytes:_bytes length:length encoding:NSUTF8StringEncoding];
+                string = [[NSString alloc] initWithBytes:_bytes + _position length:length encoding:NSUTF8StringEncoding];
             } else {
-                return [[NSMutableString alloc] initWithBytes:_bytes length:length encoding:NSUTF8StringEncoding];
+                string = [[NSMutableString alloc] initWithBytes:_bytes + _position length:length encoding:NSUTF8StringEncoding];
             }
+            
+            _position += length;
+            return string;
+        } else {
+            _error = [NSError errorWithDomain:TUMessagePackErrorDomain code:TUMessagePackNotEnoughData userInfo:nil];
         }
     } else {
-        if ((_readingOptions & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
-            return [self _popData:length];
-        } else {
-            return [[self _popData:length] mutableCopy];
-        }
+        return [self _popData:length];
     }
     
     return nil;
@@ -410,7 +403,6 @@ inline double _popFloat64(TUMessagePackSerialization *self)
 
 - (id)_popArray:(NSUInteger)length
 {
-//    id __unsafe_unretained *objects = (id __unsafe_unretained *)alloca(sizeof(id) * length);
     id objects[length];
     
     NSUInteger count = 0;
@@ -418,9 +410,14 @@ inline double _popFloat64(TUMessagePackSerialization *self)
         __attribute__((objc_precise_lifetime)) id object = [self _popObject];
         
         if (object != nil) {
-            objects[index] = object;
+            objects[count] = object;
             count++;
-        } else if (_error != nil) {
+        } else if (_error == nil) {
+            if ((_readingOptions & TUMessagePackReadingNSNullAsNil) != TUMessagePackReadingNSNullAsNil) {
+                objects[count] = [NSNull null];
+                count++;
+            }
+        } else {
             return nil;
         }
     }
