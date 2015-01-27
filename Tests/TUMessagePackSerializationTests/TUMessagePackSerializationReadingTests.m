@@ -33,8 +33,11 @@
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
     
-    NSError *error = nil;
-    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:&error];
+    __block NSError *error = nil;
+    __block id result = nil;
+    [self measureBlock:^{
+        result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:&error];
+    }];
     
     XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
