@@ -37,6 +37,55 @@ typedef enum : NSInteger {
 } TUMessagePackErrorCode;
 
 
+typedef enum : uint8_t {
+    TUMessagePackPositiveFixint = 0x00, // unused... it's special
+    TUMessagePackNegativeFixint = 0xE0,
+    TUMessagePackUInt8 = 0xCC,
+    TUMessagePackUInt16 = 0xCD,
+    TUMessagePackUInt32 = 0xCE,
+    TUMessagePackUInt64 = 0xCF,
+    
+    TUMessagePackInt8 = 0xD0,
+    TUMessagePackInt16 = 0xD1,
+    TUMessagePackInt32 = 0xD2,
+    TUMessagePackInt64 = 0xD3,
+    
+    TUMessagePackFloat = 0xCA,
+    TUMessagePackDouble = 0xCB,
+    
+    TUMessagePackNil = 0xC0,
+    
+    TUMessagePackTrue = 0xC3,
+    TUMessagePackFalse = 0xC2,
+    
+    TUMessagePackFixstr = 0xA0,
+    TUMessagePackStr8 = 0xD9,
+    TUMessagePackStr16 = 0xDA,
+    TUMessagePackStr32 = 0xDB,
+    
+    TUMessagePackBin8 = 0xC4,
+    TUMessagePackBin16 = 0xC5,
+    TUMessagePackBin32 = 0xC6,
+    
+    TUMessagePackFixarray = 0x90,
+    TUMessagePackArray16 = 0xDC,
+    TUMessagePackArray32 = 0xDD,
+    
+    TUMessagePackFixmap = 0x80,
+    TUMessagePackMap16 = 0xDE,
+    TUMessagePackMap32 = 0xDF,
+    
+    TUMessagePackFixext1 = 0xD4,
+    TUMessagePackFixext2 = 0xD5,
+    TUMessagePackFixext4 = 0xD6,
+    TUMessagePackFixext8 = 0xD7,
+    TUMessagePackFixext16 = 0xD8,
+    TUMessagePackExt8 = 0xC7,
+    TUMessagePackExt16 = 0xC8,
+    TUMessagePackExt32 = 0xC9,
+} TUMessagePackCode;
+
+
 /** You use the TUMessagePackSerialization class to convert [MessagePack](http://msgpack.org) to Foundation objects and convert Foundation objects to MessagePack.
  
  An object that may be converted to MessagePack must have the following properties:
