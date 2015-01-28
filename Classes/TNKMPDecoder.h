@@ -30,13 +30,12 @@ extern inline uint64_t TNKMPDecodeUInt64(TUReadingInfo *readingInfo);
 extern inline float TNKMPDecodeFloat32(TUReadingInfo *readingInfo);
 extern inline double TNKMPDecodeFloat64(TUReadingInfo *readingInfo);
 
-extern inline CFNumberRef TNKMPDecodeNumber(TUReadingInfo *readingInfo, CFNumberType type, NSUInteger length);
-extern inline CFDataRef TNKMPDecodeData(TUReadingInfo *readingInfo, NSUInteger stringLength);
-extern inline CFTypeRef TNKMPDecodeString(TUReadingInfo *readingInfo, NSUInteger stringLength);
-extern inline CFTypeRef TNKMPDecodeExt(TUReadingInfo *readingInfo, NSUInteger length);
+extern inline CFDataRef TNKMPDecodeCreateData(TUReadingInfo *readingInfo, NSUInteger stringLength);
+extern inline CFTypeRef TNKMPDecodeCreateString(TUReadingInfo *readingInfo, NSUInteger stringLength);
+extern inline CFTypeRef TNKMPDecodeCreateExt(TUReadingInfo *readingInfo, NSUInteger length);
 
-extern inline CFArrayRef TNKMPDecodeArray(TUReadingInfo *readingInfo, NSUInteger length);
-extern inline CFDictionaryRef TNKMPDecodeMap(TUReadingInfo *readingInfo, NSUInteger length);
+extern inline CFArrayRef TNKMPDecodeCreateArray(TUReadingInfo *readingInfo, NSUInteger length);
+extern inline CFDictionaryRef TNKMPDecodeCreateMap(TUReadingInfo *readingInfo, NSUInteger length);
 
-extern CFTypeRef TNKMPDecodeObject(TUReadingInfo *readingInfo);
+extern CFTypeRef TNKMPDecodeCreateObject(TUReadingInfo *readingInfo);
 
