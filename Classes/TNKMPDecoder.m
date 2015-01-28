@@ -12,154 +12,156 @@
 #import "TUMessagePackExtInfo.h"
 
 
-inline id TNKMPDecodeObject(TUReadingInfo *readingInfo)
+CFTypeRef TNKMPDecodeObject(TUReadingInfo *readingInfo)
 {
-    id object = nil;
-    
     TUMessagePackCode code = TNKMPDecodeUInt8(readingInfo);//[self _popInt8];
     
     switch (code) {
+        // CFNumber doesn't support unsigned integers so we have to use the next biggest size
         case TUMessagePackUInt8: {
-            object = [[NSNumber alloc] initWithUnsignedChar:TNKMPDecodeUInt8(readingInfo)];
-            break;
+            int16_t number = TNKMPDecodeUInt8(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt16Type, &number);
         } case TUMessagePackUInt16: {
-            uint16_t number = TNKMPDecodeUInt16(readingInfo);
-            object = [[NSNumber alloc] initWithUnsignedShort:number];
-            break;
+            int32_t number = TNKMPDecodeUInt16(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt32Type, &number);
         } case TUMessagePackUInt32: {
-            object = [[NSNumber alloc] initWithUnsignedLong:TNKMPDecodeUInt32(readingInfo)];
-            break;
+            int64_t number = TNKMPDecodeUInt32(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt64Type, &number);
         } case TUMessagePackUInt64: {
-            object = [[NSNumber alloc] initWithUnsignedLongLong:TNKMPDecodeUInt64(readingInfo)];
-            break;
+            int64_t number = TNKMPDecodeUInt64(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt64Type, &number);
         }
             
         case TUMessagePackInt8: {
-            object = [[NSNumber alloc] initWithChar:(int8_t)TNKMPDecodeUInt8(readingInfo)];
-            break;
+            int8_t number = TNKMPDecodeUInt8(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt8Type, &number);
         } case TUMessagePackInt16: {
-            object = [[NSNumber alloc] initWithShort:(int16_t)TNKMPDecodeUInt16(readingInfo)];
+            int16_t number = TNKMPDecodeUInt16(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt16Type, &number);
             break;
         } case TUMessagePackInt32: {
-            object = [[NSNumber alloc] initWithLong:(int32_t)TNKMPDecodeUInt32(readingInfo)];
+            int32_t number = TNKMPDecodeUInt32(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt32Type, &number);
             break;
         } case TUMessagePackInt64: {
-            object = [[NSNumber alloc] initWithLongLong:(int64_t)TNKMPDecodeUInt64(readingInfo)];
+            int64_t number = TNKMPDecodeUInt64(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberSInt64Type, &number);
             break;
         }
             
         case TUMessagePackFloat: {
-            object = [[NSNumber alloc] initWithFloat:TNKMPDecodeFloat32(readingInfo)];
+            float number = TNKMPDecodeFloat32(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberFloat32Type, &number);
             break;
         } case TUMessagePackDouble: {
-            object = [[NSNumber alloc] initWithDouble:TNKMPDecodeFloat64(readingInfo)];
+            double number = TNKMPDecodeFloat64(readingInfo);
+            return CFNumberCreate(NULL, kCFNumberFloat64Type, &number);
             break;
         }
             
         case TUMessagePackNil: {
             if ((readingInfo->options & TUMessagePackReadingNSNullAsNil) == TUMessagePackReadingNSNullAsNil) {
-                object = nil;
+                return nil;
             } else {
-                object = [NSNull null];
+                return kCFNull;
             }
             break;
         }
             
         case TUMessagePackTrue: {
-            object = (id)kCFBooleanTrue;
+            return kCFBooleanTrue;
             break;
         } case TUMessagePackFalse: {
-            object = (id)kCFBooleanFalse;
+            return kCFBooleanFalse;
             break;
         }
             
         case TUMessagePackStr8: {
-            object = TNKMPDecodeString(readingInfo, TNKMPDecodeUInt8(readingInfo));
+            return TNKMPDecodeString(readingInfo, TNKMPDecodeUInt8(readingInfo));
             break;
         } case TUMessagePackStr16: {
-            object = TNKMPDecodeString(readingInfo, TNKMPDecodeUInt16(readingInfo));
+            return TNKMPDecodeString(readingInfo, TNKMPDecodeUInt16(readingInfo));
             break;
         } case TUMessagePackStr32: {
-            object = TNKMPDecodeString(readingInfo, TNKMPDecodeUInt32(readingInfo));
+            return TNKMPDecodeString(readingInfo, TNKMPDecodeUInt32(readingInfo));
             break;
         }
             
         case TUMessagePackBin8: {
-            object = TNKMPDecodeData(readingInfo, TNKMPDecodeUInt8(readingInfo));
+            return TNKMPDecodeData(readingInfo, TNKMPDecodeUInt8(readingInfo));
             break;
         } case TUMessagePackBin16: {
-            object = TNKMPDecodeData(readingInfo, TNKMPDecodeUInt16(readingInfo));
+            return TNKMPDecodeData(readingInfo, TNKMPDecodeUInt16(readingInfo));
             break;
         } case TUMessagePackBin32: {
-            object = TNKMPDecodeData(readingInfo, TNKMPDecodeUInt32(readingInfo));
+            return TNKMPDecodeData(readingInfo, TNKMPDecodeUInt32(readingInfo));
             break;
         }
             
         case TUMessagePackArray16: {
-            object = TNKMPDecodeArray(readingInfo, TNKMPDecodeUInt16(readingInfo));
+            return TNKMPDecodeArray(readingInfo, TNKMPDecodeUInt16(readingInfo));
             break;
         } case TUMessagePackArray32: {
-            object = TNKMPDecodeArray(readingInfo, TNKMPDecodeUInt32(readingInfo));
+            return TNKMPDecodeArray(readingInfo, TNKMPDecodeUInt32(readingInfo));
             break;
         }
             
         case TUMessagePackMap16: {
-            object = TNKMPDecodeMap(readingInfo, TNKMPDecodeUInt16(readingInfo));
+            return TNKMPDecodeMap(readingInfo, TNKMPDecodeUInt16(readingInfo));
             break;
         } case TUMessagePackMap32: {
-            object = TNKMPDecodeMap(readingInfo, TNKMPDecodeUInt32(readingInfo));
+            return TNKMPDecodeMap(readingInfo, TNKMPDecodeUInt32(readingInfo));
             break;
         }
             
         case TUMessagePackFixext1: {
-            object = TNKMPDecodeExt(readingInfo, 1);
+            return TNKMPDecodeExt(readingInfo, 1);
             break;
         } case TUMessagePackFixext2: {
-            object = TNKMPDecodeExt(readingInfo, 2);
+            return TNKMPDecodeExt(readingInfo, 2);
             break;
         } case TUMessagePackFixext4: {
-            object = TNKMPDecodeExt(readingInfo, 4);
+            return TNKMPDecodeExt(readingInfo, 4);
             break;
         } case TUMessagePackFixext8: {
-            object = TNKMPDecodeExt(readingInfo, 8);
+            return TNKMPDecodeExt(readingInfo, 8);
             break;
         } case TUMessagePackFixext16: {
-            object = TNKMPDecodeExt(readingInfo, 16);
+            return TNKMPDecodeExt(readingInfo, 16);
             break;
         } case TUMessagePackExt8: {
-            object = TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt8(readingInfo));
+            return TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt8(readingInfo));
             break;
         } case TUMessagePackExt16: {
-            object = TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt16(readingInfo));
+            return TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt16(readingInfo));
             break;
         } case TUMessagePackExt32: {
-            object = TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt32(readingInfo));
+            return TNKMPDecodeExt(readingInfo, TNKMPDecodeUInt32(readingInfo));
             break;
         }
             
         default: {
             if (!(code & 0b10000000)) {
-                object = [[NSNumber alloc] initWithUnsignedChar:code];
+                int16_t number = code;
+                return CFNumberCreate(NULL, kCFNumberSInt16Type, &number);
             } else if ((code & 0b11100000) == TUMessagePackNegativeFixint) {
-                object = [[NSNumber alloc] initWithChar:code];
+                return CFNumberCreate(NULL, kCFNumberSInt8Type, &code);
             } else if ((code & 0b11100000) == TUMessagePackFixstr) {
                 uint8_t length = code & ~0b11100000;
-                object = TNKMPDecodeString(readingInfo, length);
+                return TNKMPDecodeString(readingInfo, length);
             } else if ((code & 0b11110000) == TUMessagePackFixarray) {
                 uint8_t length = code & ~0b11110000;
-                object = TNKMPDecodeArray(readingInfo, length);
+                return TNKMPDecodeArray(readingInfo, length);
             } else  if ((code & 0b11110000) == TUMessagePackFixmap) {
                 uint8_t length = code & ~0b11110000;
-                object = TNKMPDecodeMap(readingInfo, length);
+                return TNKMPDecodeMap(readingInfo, length);
             } else if (readingInfo->error == NULL) {
                 readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackNoMatchingFormatCode, nil);
             }
-            
-            break;
         }
     }
     
-    return object;
+    return NULL;
 }
 
 inline uint8_t TNKMPDecodeVariable(TUReadingInfo *readingInfo, void *variable, NSUInteger length)
@@ -218,15 +220,17 @@ inline double TNKMPDecodeFloat64(TUReadingInfo *readingInfo)
     return CFConvertDoubleSwappedToHost(number);
 }
 
-inline NSData *TNKMPDecodeData(TUReadingInfo *readingInfo, NSUInteger length)
+inline CFDataRef TNKMPDecodeData(TUReadingInfo *readingInfo, NSUInteger length)
 {
     if (readingInfo->position + length <= readingInfo->length) {
-        NSData *data = nil;
+        CFDataRef data = nil;
         
         if ((readingInfo->options & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
-            data = [[NSData alloc] initWithBytes:readingInfo->bytes + readingInfo->position length:length];
+            data = CFDataCreate(NULL, readingInfo->bytes + readingInfo->position, length);
         } else {
-            data = [[NSMutableData alloc] initWithBytes:readingInfo->bytes + readingInfo->position length:length];
+            CFMutableDataRef mutableData = CFDataCreateMutable(NULL, length);
+            CFDataAppendBytes(mutableData, readingInfo->bytes + readingInfo->position, length);
+            data = mutableData;
         }
         
         readingInfo->position += length;
@@ -238,16 +242,17 @@ inline NSData *TNKMPDecodeData(TUReadingInfo *readingInfo, NSUInteger length)
     return nil;
 }
 
-inline id TNKMPDecodeString(TUReadingInfo *readingInfo, NSUInteger stringLength)
+inline CFTypeRef TNKMPDecodeString(TUReadingInfo *readingInfo, NSUInteger stringLength)
 {
     if ((readingInfo->options & TUMessagePackReadingStringsAsData) != TUMessagePackReadingStringsAsData) {
         if (readingInfo->position + stringLength <= readingInfo->length) {
-            NSString *string = nil;
+            CFStringRef string = nil;
             
-            if ((readingInfo->options & TUMessagePackReadingMutableLeaves) != TUMessagePackReadingMutableLeaves) {
-                string = [[NSString alloc] initWithBytes:readingInfo->bytes + readingInfo->position length:stringLength encoding:NSUTF8StringEncoding];
-            } else {
-                string = [[NSMutableString alloc] initWithBytes:readingInfo->bytes + readingInfo->position length:stringLength encoding:NSUTF8StringEncoding];
+            string = CFStringCreateWithBytes(NULL, readingInfo->bytes + readingInfo->position, stringLength, kCFStringEncodingUTF8, false);
+            if ((readingInfo->options & TUMessagePackReadingMutableLeaves) == TUMessagePackReadingMutableLeaves) {
+                CFStringRef oldString = string;
+                string = CFStringCreateMutableCopy(NULL, 0, oldString);
+                CFRelease(oldString);
             }
             
             readingInfo->position += stringLength;
@@ -262,37 +267,33 @@ inline id TNKMPDecodeString(TUReadingInfo *readingInfo, NSUInteger stringLength)
     return nil;
 }
 
-inline id TNKMPDecodeExt(TUReadingInfo *readingInfo, NSUInteger length)
+inline CFTypeRef TNKMPDecodeExt(TUReadingInfo *readingInfo, NSUInteger length)
 {
-    id object = nil;
-    
     uint8_t type = TNKMPDecodeUInt8(readingInfo);
-    NSData *extData = TNKMPDecodeData(readingInfo, length);
+    CFDataRef extData = TNKMPDecodeData(readingInfo, length);
     
     Class extClass = [TUMessagePackSerialization _registeredExtClasses][@(type)];
     if (extClass == nil) {
         extClass = [TUMessagePackExtInfo class];
     }
     
-    object = [[extClass alloc] initWithMessagePackExtData:extData type:type];
-    
-    return object;
+    return CFBridgingRetain([[extClass alloc] initWithMessagePackExtData:CFBridgingRelease(extData) type:type]);
 }
 
-inline NSArray *TNKMPDecodeArray(TUReadingInfo *readingInfo, NSUInteger length)
+inline CFArrayRef TNKMPDecodeArray(TUReadingInfo *readingInfo, NSUInteger length)
 {
-    id objects[length];
+    CFTypeRef objects[length];
     
     NSUInteger count = 0;
     for (NSUInteger index = 0; index < length; index++) {
-        id object = TNKMPDecodeObject(readingInfo);
+        CFTypeRef object = TNKMPDecodeObject(readingInfo);
         
         if (object != nil) {
             objects[count] = object;
             count++;
         } else if (readingInfo->error == NULL) {
             if ((readingInfo->options & TUMessagePackReadingNSNullAsNil) != TUMessagePackReadingNSNullAsNil) {
-                objects[count] = [NSNull null];
+                objects[count] = kCFNull;
                 count++;
             }
         } else {
@@ -300,18 +301,21 @@ inline NSArray *TNKMPDecodeArray(TUReadingInfo *readingInfo, NSUInteger length)
         }
     }
     
-    return [[NSArray alloc] initWithObjects:objects count:count];
+    CFArrayCallBacks callbacks = kCFTypeArrayCallBacks;
+    callbacks.retain = NULL;// these are already +1 retain count
+    
+    return CFArrayCreate(NULL, objects, count, &callbacks);
 }
 
-inline id TNKMPDecodeMap(TUReadingInfo *readingInfo, NSUInteger length)
+inline CFDictionaryRef TNKMPDecodeMap(TUReadingInfo *readingInfo, NSUInteger length)
 {
-    id __strong keys[length];
-    id __strong objects[length];
+    CFTypeRef keys[length];
+    CFTypeRef objects[length];
     
     NSUInteger count = 0;
     for (NSUInteger index = 0; index < length; index++) {
-        id key = TNKMPDecodeObject(readingInfo);
-        id object = TNKMPDecodeObject(readingInfo);
+        CFTypeRef key = TNKMPDecodeObject(readingInfo);
+        CFTypeRef object = TNKMPDecodeObject(readingInfo);
         
         if (key != nil) {
             if (object != nil) {
@@ -320,7 +324,7 @@ inline id TNKMPDecodeMap(TUReadingInfo *readingInfo, NSUInteger length)
                 count++;
             } else if ((readingInfo->options & TUMessagePackReadingNSNullAsNil) != TUMessagePackReadingNSNullAsNil) {
                 keys[count] = key;
-                objects[count] = [NSNull null];
+                objects[count] = kCFNull;
                 count++;
             }
         }
@@ -330,5 +334,11 @@ inline id TNKMPDecodeMap(TUReadingInfo *readingInfo, NSUInteger length)
         }
     }
     
-    return [[NSDictionary alloc] initWithObjects:objects forKeys:keys count:count];
+    CFDictionaryKeyCallBacks keysCallback = kCFTypeDictionaryKeyCallBacks;
+    keysCallback.retain = NULL;// these are already +1 retain count
+    
+    CFDictionaryValueCallBacks valuesCallback = kCFTypeDictionaryValueCallBacks;
+    keysCallback.retain = NULL;// these are already +1 retain count
+    
+    return CFDictionaryCreate(NULL, keys, objects, count, &keysCallback, &valuesCallback);
 }

@@ -67,14 +67,10 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
     _readingInfo.position = 0;
     _readingInfo.length = data.length;
     
-    id object = TNKMPDecodeObject(&_readingInfo);
+    id object = CFBridgingRelease(TNKMPDecodeObject(&_readingInfo));
     
-    if (error != NULL) {
-        if (_error != nil) {
-            *error = _error;
-        } else if (_readingInfo.error != NULL) {
-            *error = CFBridgingRelease(_readingInfo.error);
-        }
+    if (error != NULL && _readingInfo.error != NULL) {
+        *error = CFBridgingRelease(_readingInfo.error);
     }
     
     return object;
