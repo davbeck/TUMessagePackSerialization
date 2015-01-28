@@ -33,11 +33,8 @@
 {
     NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
     
-    __block NSError *error = nil;
-    __block id result = nil;
-    [self measureBlock:^{
-        result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:&error];
-    }];
+    NSError *error = nil;
+    id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:&error];
     
     XCTAssertNil(error, @"Error reading %@: %@", testType, error);
     
@@ -56,6 +53,19 @@
 - (void)_testReadingWithType:(NSString *)testType expectedValue:(id)expectedValue
 {
     [self _testReadingWithType:testType expectedValue:expectedValue additionalTests:nil];
+}
+
+- (void)_testReadingPerformanceWithType:(NSString *)testType expectedValue:(id)expectedValue additionalTests:(void(^)(id result))additionalTests options:(TUMessagePackReadingOptions)options
+{
+    NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
+    
+    [self measureBlock:^{
+        id result = [TUMessagePackSerialization messagePackObjectWithData:example options:TUMessagePackReadingAllowFragments | options error:NULL];
+        
+        if (additionalTests != nil) {
+            additionalTests(result);
+        }
+    }];
 }
 
 
@@ -190,6 +200,8 @@
     [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:^(id result) {
         XCTAssertFalse([result isKindOfClass:[NSMutableData class]], @"Returned data is mutable when not passing TUMessagePackReadingMutableLeaves.");
     }];
+    
+    [self _testReadingPerformanceWithType:@"Str32" expectedValue:testString additionalTests:nil options:0];
 }
 
 - (void)testMutableLeaves
@@ -246,6 +258,8 @@
     }
     
     [self _testReadingWithType:@"Array32" expectedValue:testArray];
+    
+    [self _testReadingPerformanceWithType:@"Array32" expectedValue:testArray additionalTests:nil options:0];
 }
 
 
@@ -274,6 +288,8 @@
     }
     
     [self _testReadingWithType:@"Map32" expectedValue:testMap];
+    
+    [self _testReadingPerformanceWithType:@"Map32" expectedValue:testMap additionalTests:nil options:0];
 }
 
 
@@ -291,6 +307,8 @@
     id twitter = [NSJSONSerialization JSONObjectWithData:twitterData options:0 error:NULL];
     
     [self _testReadingWithType:@"Twitter" expectedValue:twitter];
+    
+    [self _testReadingPerformanceWithType:@"Twitter" expectedValue:twitter additionalTests:nil options:0];
 }
 
 @end

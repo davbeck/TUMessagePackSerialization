@@ -55,22 +55,17 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 + (id)messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
-    TUMessagePackSerialization *serialization = [[TUMessagePackSerialization alloc] init];
+    TUReadingInfo readingInfo;
+    readingInfo.options = opt;
+    readingInfo.bytes = data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
+    readingInfo.position = 0;
+    readingInfo.length = data.length;
+    readingInfo.error = NULL;
     
-    return [serialization _messagePackObjectWithData:data options:opt error:error];
-}
-
-- (id)_messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
-{
-    _readingInfo.options = opt;
-    _readingInfo.bytes = data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
-    _readingInfo.position = 0;
-    _readingInfo.length = data.length;
+    id object = CFBridgingRelease(TNKMPDecodeCreateObject(&readingInfo));
     
-    id object = CFBridgingRelease(TNKMPDecodeCreateObject(&_readingInfo));
-    
-    if (error != NULL && _readingInfo.error != NULL) {
-        *error = CFBridgingRelease(_readingInfo.error);
+    if (error != NULL && readingInfo.error != NULL) {
+        *error = CFBridgingRelease(readingInfo.error);
     }
     
     return object;

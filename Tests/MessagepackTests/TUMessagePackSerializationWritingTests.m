@@ -50,6 +50,17 @@
     [self _testWritingWithValue:value type:testType additionalTests:nil options:0];
 }
 
+- (void)_testWritingPerformanceWithValue:(id)value type:(NSString *)testType additionalTests:(void(^)(id result))additionalTests options:(TUMessagePackWritingOptions)options
+{
+    [self measureBlock:^{
+        NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:value options:options error:NULL];
+        
+        if (additionalTests != nil) {
+            additionalTests(result);
+        }
+    }];
+}
+
 
 #pragma mark - Fixint
 
@@ -160,6 +171,8 @@
     NSString *testString = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"] encoding:NSUTF8StringEncoding error:NULL];
     
     [self _testWritingWithValue:testString type:@"Str32"];
+    
+    [self _testWritingPerformanceWithValue:testString type:@"Str32" additionalTests:nil options:0];
 }
 
 
@@ -193,6 +206,8 @@
     }
     
     [self _testWritingWithValue:testArray type:@"Array32"];
+    
+    [self _testWritingPerformanceWithValue:testArray type:@"Array32" additionalTests:nil options:0];
 }
 
 
@@ -228,6 +243,8 @@
     }
     
     [self _testWritingWithValue:testMap type:@"Map32"];
+    
+    [self _testWritingPerformanceWithValue:testMap type:@"Map32" additionalTests:nil options:0];
 }
 
 
@@ -256,6 +273,10 @@
     XCTAssertNil(error, @"Error reading written Twitter: %@", error);
     
     XCTAssertEqualObjects(twitter, object, @"Twitter value incorrect");
+    
+    [self measureBlock:^{
+        [TUMessagePackSerialization dataWithMessagePackObject:twitter options:0 error:NULL];
+    }];
 }
 
 @end
