@@ -32,8 +32,9 @@ typedef enum : NSUInteger {
 
 extern NSString *TUMessagePackErrorDomain;
 typedef enum : NSInteger {
-	TUMessagePackNoMatchingFormatCode,
+    TUMessagePackNoMatchingFormatCode,
     TUMessagePackNotEnoughData,
+    TUMessagePackObjectTooBig,
 } TUMessagePackErrorCode;
 
 
@@ -59,13 +60,13 @@ typedef enum : uint8_t {
     TUMessagePackFalse = 0xC2,
     
     TUMessagePackFixstr = 0xA0,
-    TUMessagePackStr8 = 0xD9,
+    TUMessagePackStr8 = 0xD9, // v5
     TUMessagePackStr16 = 0xDA,
     TUMessagePackStr32 = 0xDB,
     
-    TUMessagePackBin8 = 0xC4,
-    TUMessagePackBin16 = 0xC5,
-    TUMessagePackBin32 = 0xC6,
+    TUMessagePackBin8 = 0xC4, // v5
+    TUMessagePackBin16 = 0xC5, // v5
+    TUMessagePackBin32 = 0xC6, // v5
     
     TUMessagePackFixarray = 0x90,
     TUMessagePackArray16 = 0xDC,

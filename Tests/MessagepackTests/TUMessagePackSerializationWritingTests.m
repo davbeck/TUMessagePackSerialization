@@ -50,7 +50,7 @@
     [self _testWritingWithValue:value type:testType additionalTests:nil options:0];
 }
 
-- (void)_testWritingPerformanceWithValue:(id)value type:(NSString *)testType additionalTests:(void(^)(id result))additionalTests options:(TUMessagePackWritingOptions)options
+- (void)_testWritingPerformanceWithValue:(id)value additionalTests:(void(^)(id result))additionalTests options:(TUMessagePackWritingOptions)options
 {
     [self measureBlock:^{
         NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:value options:options error:NULL];
@@ -172,7 +172,51 @@
     
     [self _testWritingWithValue:testString type:@"Str32"];
     
-    [self _testWritingPerformanceWithValue:testString type:@"Str32" additionalTests:nil options:0];
+    [self _testWritingPerformanceWithValue:testString additionalTests:nil options:0];
+}
+
+- (void)testCString
+{
+    // because the encoder uses a special fast path for encoding NS/CFStrings that are stored as UTF8, we need special testing for the scenario
+    
+    CFStringRef utf8String = CFSTR("test");
+    XCTAssert(CFStringGetCStringPtr(utf8String, kCFStringEncodingUTF8) != NULL, @"Test did not generate a UTF-8 string.");
+    
+    [self _testWritingWithValue:(__bridge NSString *)utf8String type:@"Fixstr"];
+    [self measureBlock:^{
+        for (NSUInteger i = 0; i < 1000; i++) {
+            [TUMessagePackSerialization dataWithMessagePackObject:(__bridge id)(utf8String) options:0 error:NULL];
+        }
+    }];
+    
+    CFRelease(utf8String);
+}
+
+- (void)testUnicodeString
+{
+    // because the encoder uses a special fast path for encoding NS/CFStrings that are stored as UTF8, we need special testing for the scenario
+    
+    CFStringRef utf16String = CFBridgingRetain(@"\u1F603");
+    XCTAssert(CFStringGetCStringPtr(utf16String, kCFStringEncodingUTF8) == NULL, @"Test did not generate a UTF-16 string.");
+    
+    
+    
+    NSError *error = nil;
+    NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:(__bridge id)(utf16String) options:0 error:&error];
+    id object = [TUMessagePackSerialization messagePackObjectWithData:result options:0 error:&error];
+    
+    XCTAssertNil(error, @"Error writting %@: %@", utf16String, error);
+    
+    XCTAssertEqualObjects((__bridge id)(utf16String), object, @"Strings don't match after passing through MessagePack.");
+    
+    [self measureBlock:^{
+        for (NSUInteger i = 0; i < 1000; i++) {
+            [TUMessagePackSerialization dataWithMessagePackObject:(__bridge id)(utf16String) options:0 error:NULL];
+        }
+    }];
+    
+    
+    CFRelease(utf16String);
 }
 
 
@@ -207,7 +251,7 @@
     
     [self _testWritingWithValue:testArray type:@"Array32"];
     
-    [self _testWritingPerformanceWithValue:testArray type:@"Array32" additionalTests:nil options:0];
+    [self _testWritingPerformanceWithValue:testArray additionalTests:nil options:0];
 }
 
 
@@ -244,7 +288,17 @@
     
     [self _testWritingWithValue:testMap type:@"Map32"];
     
-    [self _testWritingPerformanceWithValue:testMap type:@"Map32" additionalTests:nil options:0];
+    [self _testWritingPerformanceWithValue:testMap additionalTests:nil options:0];
+}
+
+- (void)testMap32Unordered
+{
+    NSMutableDictionary *testMap = [[NSMutableDictionary alloc] initWithCapacity:200];
+    for (NSUInteger i = 1; i <= 82590; i++) {
+        testMap[@(i)] = @(i + 100);
+    }
+    
+    [self _testWritingPerformanceWithValue:testMap additionalTests:nil options:0];
 }
 
 

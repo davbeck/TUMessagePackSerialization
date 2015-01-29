@@ -11,8 +11,8 @@
 
 @implementation TUOrderedMap
 {
-    NSMutableArray *_keys;
-    NSMutableArray *_objects;
+    NSMutableOrderedSet *_keys;
+    NSMutableDictionary *_objects;
 }
 
 #pragma mark - Required override methods
@@ -21,8 +21,8 @@
 {
     self = [super init];
     if (self != nil) {
-        _keys = [[NSMutableArray alloc] initWithObjects:keys count:count];
-        _objects = [[NSMutableArray alloc] initWithObjects:objects count:count];
+        _keys = [[NSMutableOrderedSet alloc] initWithObjects:keys count:count];
+        _objects = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys count:count];
     }
     
     return self;
@@ -32,8 +32,8 @@
 {
     self = [super init];
     if (self) {
-        _keys = [[NSMutableArray alloc] initWithCapacity:numItems];
-        _objects = [[NSMutableArray alloc] initWithCapacity:numItems];
+        _keys = [[NSMutableOrderedSet alloc] initWithCapacity:numItems];
+        _objects = [[NSMutableDictionary alloc] initWithCapacity:numItems];
     }
     return self;
 }
@@ -45,13 +45,7 @@
 
 - (id)objectForKey:(id)aKey
 {
-    NSInteger index = [_keys indexOfObject:aKey];
-    
-    if (index != NSNotFound) {
-        return [_objects objectAtIndex:index];
-    }
-    
-    return nil;
+    return [_objects objectForKey:aKey];
 }
 
 - (NSEnumerator *)keyEnumerator
@@ -62,17 +56,13 @@
 - (void)setObject:(id)anObject forKey:(id < NSCopying >)aKey
 {
     [_keys addObject:aKey];
-    [_objects addObject:anObject];
+    [_objects setObject:anObject forKey:aKey];
 }
 
 - (void)removeObjectForKey:(id)aKey
 {
-    NSInteger index = [_keys indexOfObject:aKey];
-    
-    if (index != NSNotFound) {
-        [_keys removeObjectAtIndex:index];
-        [_objects removeObjectAtIndex:index];
-    }
+    [_keys removeObject:aKey];
+    [_objects removeObjectForKey:aKey];
 }
 
 
@@ -81,7 +71,7 @@
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id key, id obj, BOOL *stop))block
 {
     [_keys enumerateObjectsUsingBlock:^(id key, NSUInteger idx, BOOL *stop) {
-        id obj = _objects[idx];
+        id obj = _objects[key];
         
         block(key, obj, stop);
     }];
