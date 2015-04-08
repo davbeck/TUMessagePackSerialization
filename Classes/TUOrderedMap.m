@@ -53,7 +53,21 @@
     return [_keys objectEnumerator];
 }
 
-- (void)setObject:(id)anObject forKey:(id < NSCopying >)aKey
+- (NSEnumerator *)reverseKeyEnumerator
+{
+    return [_keys reverseObjectEnumerator];
+}
+
+- (void)insertObject:(id)anObject forKey:(id <NSCopying>)aKey atIndex:(NSUInteger)anIndex
+{
+    if ([_objects objectForKey:aKey] != nil) {
+        [self removeObjectForKey:aKey];
+    }
+    [_keys insertObject:aKey atIndex:anIndex];
+    [_objects setObject:anObject forKey:aKey];
+}
+
+- (void)setObject:(id)anObject forKey:(id <NSCopying>)aKey
 {
     [_keys addObject:aKey];
     [_objects setObject:anObject forKey:aKey];
