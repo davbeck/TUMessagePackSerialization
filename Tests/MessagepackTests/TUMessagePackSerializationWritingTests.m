@@ -222,7 +222,26 @@
 
 #pragma mark - Bin
 
-// Bin8|16|32 reading test will go here when we can create the test file some how
+- (void)testBin8
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin8" ofType:@"txt"]];
+    
+    [self _testWritingWithValue:testData type:@"Bin8"];
+}
+
+- (void)testBin16
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin16" ofType:@"rtf"]];
+    
+    [self _testWritingWithValue:testData type:@"Bin16"];
+}
+
+- (void)testBin32
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin32" ofType:@"pages"]];
+    
+    [self _testWritingWithValue:testData type:@"Bin32"];
+}
 
 
 #pragma mark - Array

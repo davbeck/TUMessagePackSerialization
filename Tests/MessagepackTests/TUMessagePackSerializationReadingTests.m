@@ -179,36 +179,28 @@
 
 - (void)testFixstr
 {
-    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:^(id result) {
-        XCTAssertFalse([result isKindOfClass:[NSMutableData class]], @"Returned data is mutable when not passing TUMessagePackReadingMutableLeaves.");
-    }];
+    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:nil];
 }
 
 // Str8 reading test will go here when we can create the test file some how
 
 - (void)testStr16
 {
-    [self _testReadingWithType:@"Str16" expectedValue:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus aliquet augue a scelerisque. Ut viverra velit nisl, sit amet convallis arcu iaculis id. Curabitur semper, nibh ut ornare hendrerit, orci massa facilisis velit, eget tincidunt enim velit non tellus. Class aptent taciti sociosqu ad litora torquent metus." additionalTests:^(id result) {
-        XCTAssertFalse([result isKindOfClass:[NSMutableData class]], @"Returned data is mutable when not passing TUMessagePackReadingMutableLeaves.");
-    }];
+    [self _testReadingWithType:@"Str16" expectedValue:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus aliquet augue a scelerisque. Ut viverra velit nisl, sit amet convallis arcu iaculis id. Curabitur semper, nibh ut ornare hendrerit, orci massa facilisis velit, eget tincidunt enim velit non tellus. Class aptent taciti sociosqu ad litora torquent metus." additionalTests:nil];
 }
 
 - (void)testStr32
 {
     NSString *testString = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"] encoding:NSUTF8StringEncoding error:NULL];
     
-    [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:^(id result) {
-        XCTAssertFalse([result isKindOfClass:[NSMutableData class]], @"Returned data is mutable when not passing TUMessagePackReadingMutableLeaves.");
-    }];
+    [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:nil];
     
     [self _testReadingPerformanceWithType:@"Str32" expectedValue:testString additionalTests:nil options:0];
 }
 
 - (void)testMutableLeaves
 {
-    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:^(id result) {
-        XCTAssertTrue([result isKindOfClass:[NSMutableString class]], @"Returned string is not mutable when passing TUMessagePackReadingMutableLeaves.");
-    } options:TUMessagePackReadingMutableLeaves];
+    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:nil options:TUMessagePackReadingMutableLeaves];
 }
 
 - (void)testStringAsData
@@ -230,7 +222,26 @@
 
 #pragma mark - Bin
 
-// Bin8|16|32 reading test will go here when we can create the test file some how
+- (void)testBin8
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin8" ofType:@"txt"]];
+    
+    [self _testReadingWithType:@"Bin8" expectedValue:testData additionalTests:nil];
+}
+
+- (void)testBin16
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin16" ofType:@"rtf"]];
+    
+    [self _testReadingWithType:@"Bin16" expectedValue:testData additionalTests:nil];
+}
+
+- (void)testBin32
+{
+    NSData *testData = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Bin32" ofType:@"pages"]];
+    
+    [self _testReadingWithType:@"Bin32" expectedValue:testData additionalTests:nil];
+}
 
 
 #pragma mark - Array

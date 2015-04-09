@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		119C146E1AD5F4440014CFC6 /* Bin16.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 119C146C1AD5F4440014CFC6 /* Bin16.rtf */; };
+		119C146F1AD5F4440014CFC6 /* Bin16.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 119C146D1AD5F4440014CFC6 /* Bin16.msgpack */; };
+		119C14711AD6D37D0014CFC6 /* Bin8.txt in Resources */ = {isa = PBXBuildFile; fileRef = 119C14701AD6D37D0014CFC6 /* Bin8.txt */; };
+		119C14731AD6D4590014CFC6 /* Bin8.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 119C14721AD6D4590014CFC6 /* Bin8.msgpack */; };
+		119C14751AD6D55C0014CFC6 /* Bin32.pages in Resources */ = {isa = PBXBuildFile; fileRef = 119C14741AD6D4B20014CFC6 /* Bin32.pages */; };
+		119C14771AD6D5940014CFC6 /* Bin32.msgpack in Resources */ = {isa = PBXBuildFile; fileRef = 119C14761AD6D5940014CFC6 /* Bin32.msgpack */; };
 		11CF59691A780ACC007ABB84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CF59681A780ACC007ABB84 /* main.m */; };
 		11CF596C1A780ACC007ABB84 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CF596B1A780ACC007ABB84 /* AppDelegate.m */; };
 		11CF596F1A780ACC007ABB84 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CF596E1A780ACC007ABB84 /* ViewController.m */; };
@@ -58,6 +64,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		119C146C1AD5F4440014CFC6 /* Bin16.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Bin16.rtf; sourceTree = "<group>"; };
+		119C146D1AD5F4440014CFC6 /* Bin16.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bin16.msgpack; sourceTree = "<group>"; };
+		119C14701AD6D37D0014CFC6 /* Bin8.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bin8.txt; sourceTree = "<group>"; };
+		119C14721AD6D4590014CFC6 /* Bin8.msgpack */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Bin8.msgpack; sourceTree = "<group>"; };
+		119C14741AD6D4B20014CFC6 /* Bin32.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bin32.pages; sourceTree = "<group>"; };
+		119C14761AD6D5940014CFC6 /* Bin32.msgpack */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bin32.msgpack; sourceTree = "<group>"; };
 		11CF59641A780ACB007ABB84 /* Messagepack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messagepack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11CF59671A780ACC007ABB84 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11CF59681A780ACC007ABB84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -196,6 +208,12 @@
 				11CF59A91A780B17007ABB84 /* UInt16.msgpack */,
 				11CF59AA1A780B17007ABB84 /* UInt32.msgpack */,
 				11CF59AB1A780B17007ABB84 /* UInt64.msgpack */,
+				119C14701AD6D37D0014CFC6 /* Bin8.txt */,
+				119C14721AD6D4590014CFC6 /* Bin8.msgpack */,
+				119C146C1AD5F4440014CFC6 /* Bin16.rtf */,
+				119C146D1AD5F4440014CFC6 /* Bin16.msgpack */,
+				119C14741AD6D4B20014CFC6 /* Bin32.pages */,
+				119C14761AD6D5940014CFC6 /* Bin32.msgpack */,
 				11CF59811A780ACC007ABB84 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -337,10 +355,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				119C146F1AD5F4440014CFC6 /* Bin16.msgpack in Resources */,
 				11CF59B91A780B17007ABB84 /* Map32.msgpack in Resources */,
 				11CF59C31A780B17007ABB84 /* UInt8.msgpack in Resources */,
+				119C14731AD6D4590014CFC6 /* Bin8.msgpack in Resources */,
 				11CF59BD1A780B17007ABB84 /* Str16.msgpack in Resources */,
 				11CF59B11A780B17007ABB84 /* Fixarray.msgpack in Resources */,
+				119C14711AD6D37D0014CFC6 /* Bin8.txt in Resources */,
+				119C14751AD6D55C0014CFC6 /* Bin32.pages in Resources */,
 				11CF59BB1A780B17007ABB84 /* Nil.msgpack in Resources */,
 				11CF59BE1A780B17007ABB84 /* Str32.msgpack in Resources */,
 				11CF59B21A780B17007ABB84 /* Fixmap.msgpack in Resources */,
@@ -352,8 +374,10 @@
 				11CF59AE1A780B17007ABB84 /* Bin16.ico in Resources */,
 				11CF59C61A780B17007ABB84 /* UInt64.msgpack in Resources */,
 				11CF59B61A780B17007ABB84 /* Int32.msgpack in Resources */,
+				119C146E1AD5F4440014CFC6 /* Bin16.rtf in Resources */,
 				11CF59B01A780B17007ABB84 /* False.msgpack in Resources */,
 				11CF59C51A780B17007ABB84 /* UInt32.msgpack in Resources */,
+				119C14771AD6D5940014CFC6 /* Bin32.msgpack in Resources */,
 				11CF59C01A780B17007ABB84 /* True.msgpack in Resources */,
 				11CF59AD1A780B17007ABB84 /* Array32.msgpack in Resources */,
 				11CF59BF1A780B17007ABB84 /* Str32.txt in Resources */,
