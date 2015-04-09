@@ -11,10 +11,4 @@
 #import "TUMessagePackSerialization.h"
 
 
-typedef struct {
-    CFMutableDataRef data;
-    TUMessagePackWritingOptions options;
-    CFErrorRef error; // no objc objects in structs :/
-} TNKMPEncodeInfo;
-
-extern CFDataRef TNKMPCreateDataByEncodingObject(CFTypeRef object, CFErrorRef *error);
+extern CFDataRef TNKMPCreateDataByEncodingObject(CFTypeRef object, TUMessagePackWritingOptions options, CFErrorRef *error);

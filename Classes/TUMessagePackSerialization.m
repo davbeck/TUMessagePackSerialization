@@ -58,17 +58,12 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 
 + (id)messagePackObjectWithData:(NSData *)data options:(TUMessagePackReadingOptions)opt error:(NSError **)error
 {
-    TUReadingInfo readingInfo;
-    readingInfo.options = opt;
-    readingInfo.bytes = data.bytes; // for whatever reason, this takes a good chunk of time, so we cache the result
-    readingInfo.position = 0;
-    readingInfo.length = data.length;
-    readingInfo.error = NULL;
+    CFErrorRef coreError = NULL;
     
-    id object = CFBridgingRelease(TNKMPDecodeCreateObject(&readingInfo));
+    id object = CFBridgingRelease(TNKMPCreateObjectByDecodingData((__bridge CFDataRef)(data), opt, &coreError));
     
-    if (error != NULL && readingInfo.error != NULL) {
-        *error = CFBridgingRelease(readingInfo.error);
+    if (error != NULL) {
+        *error = (__bridge NSError *)(coreError);
     }
     
     return object;
@@ -81,7 +76,7 @@ NSString *TUMessagePackErrorDomain = @"com.ThinkUltimate.MessagePack.Error";
 {
     CFErrorRef coreError = NULL;
     
-    NSData *data = CFBridgingRelease(TNKMPCreateDataByEncodingObject((__bridge CFTypeRef)(obj), &coreError));
+    NSData *data = CFBridgingRelease(TNKMPCreateDataByEncodingObject((__bridge CFTypeRef)(obj), opt, &coreError));
     
     if (error != NULL) {
         *error = (__bridge NSError *)(coreError);

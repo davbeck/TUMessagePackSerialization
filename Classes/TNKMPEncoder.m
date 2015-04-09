@@ -11,6 +11,12 @@
 #import "NSNumber+TUMetaData.h"
 
 
+typedef struct {
+    CFMutableDataRef data;
+    TUMessagePackWritingOptions options;
+    CFErrorRef error; // no objc objects in structs :/
+} TNKMPEncodeInfo;
+
 extern void TNKMPEncodeObject(TNKMPEncodeInfo *readingInfo, CFTypeRef object);
 extern inline void TNKMPEncodeCode(TNKMPEncodeInfo *readingInfo, TUMessagePackCode code);
 extern inline void TNKMPEncodeDataObjectAsString(TNKMPEncodeInfo *readingInfo, CFDataRef data);
@@ -29,10 +35,11 @@ CFDataAppendBytes(readingInfo->data, (UInt8 *)&value, sizeof(value)); \
 
 
 
-CFDataRef TNKMPCreateDataByEncodingObject(CFTypeRef object, CFErrorRef *error)
+CFDataRef TNKMPCreateDataByEncodingObject(CFTypeRef object, TUMessagePackWritingOptions options, CFErrorRef *error)
 {
     TNKMPEncodeInfo encodeInfo;
     encodeInfo.data = CFDataCreateMutable(NULL, 0);
+    encodeInfo.options = options;
     encodeInfo.error = NULL;
     
     TNKMPEncodeObject(&encodeInfo, object);
