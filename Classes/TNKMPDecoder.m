@@ -351,8 +351,16 @@ inline CFArrayRef TNKMPDecodeCreateArray(TUReadingInfo *readingInfo, NSUInteger 
     
     CFArrayCallBacks callbacks = kCFTypeArrayCallBacks;
     callbacks.retain = NULL;// these are already +1 retain count
-    
-    return CFArrayCreate(NULL, objects, count, &callbacks);
+	
+	if ((readingInfo->options & TUMessagePackReadingMutableContainers) != TUMessagePackReadingMutableContainers) {
+		return CFArrayCreate(NULL, objects, count, &callbacks);
+	} else {
+		CFMutableArrayRef array = CFArrayCreateMutable(NULL, count, &callbacks);
+		for (CFIndex index = 0; index < count; index++) {
+			CFArraySetValueAtIndex(array, index, objects[index]);
+		}
+		return array;
+	}
 }
 
 inline CFDictionaryRef TNKMPDecodeCreateMap(TUReadingInfo *readingInfo, NSUInteger length)
@@ -386,7 +394,15 @@ inline CFDictionaryRef TNKMPDecodeCreateMap(TUReadingInfo *readingInfo, NSUInteg
     keysCallback.retain = NULL;// these are already +1 retain count
     
     CFDictionaryValueCallBacks valuesCallback = kCFTypeDictionaryValueCallBacks;
-    valuesCallback.retain = NULL;// these are already +1 retain count
-    
-    return CFDictionaryCreate(NULL, keys, objects, count, &keysCallback, &valuesCallback);
+	valuesCallback.retain = NULL;// these are already +1 retain count
+	
+	if ((readingInfo->options & TUMessagePackReadingMutableContainers) != TUMessagePackReadingMutableContainers) {
+		return CFDictionaryCreate(NULL, keys, objects, count, &keysCallback, &valuesCallback);
+	} else {
+		CFMutableDictionaryRef map = CFDictionaryCreateMutable(NULL, count, &keysCallback, &valuesCallback);
+		for (CFIndex index = 0; index < count; index++) {
+			CFDictionarySetValue(map, keys[index], objects[index]);
+		}
+		return map;
+	}
 }

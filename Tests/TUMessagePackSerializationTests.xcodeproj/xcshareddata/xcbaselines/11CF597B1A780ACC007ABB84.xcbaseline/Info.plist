@@ -4,6 +4,18 @@
 <dict>
 	<key>runDestinationsByUUID</key>
 	<dict>
+		<key>49BD3864-87AE-41B6-A5CD-B8202561D88A</key>
+		<dict>
+			<key>targetArchitecture</key>
+			<string>armv7f</string>
+			<key>targetDevice</key>
+			<dict>
+				<key>modelCode</key>
+				<string>iPhone4,1</string>
+				<key>platformIdentifier</key>
+				<string>com.apple.platform.iphoneos</string>
+			</dict>
+		</dict>
 		<key>9BDD5040-44A0-4A27-8151-D899880E3588</key>
 		<dict>
 			<key>targetArchitecture</key>

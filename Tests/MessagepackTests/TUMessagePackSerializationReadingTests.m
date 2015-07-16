@@ -198,9 +198,15 @@
     [self _testReadingPerformanceWithType:@"Str32" expectedValue:testString additionalTests:nil options:0];
 }
 
-- (void)testMutableLeaves
+- (void)testStrMutableLeaves
 {
-    [self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:nil options:TUMessagePackReadingMutableLeaves];
+	[self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:^(id result) {
+		XCTAssertNoThrow([result appendString:@"ing"], @"TUMessagePackReadingMutableLeaves should return a mutable string");
+	} options:TUMessagePackReadingMutableLeaves];
+	
+	[self _testReadingWithType:@"Fixstr" expectedValue:@"test" additionalTests:^(id result) {
+		XCTAssertThrows([result appendString:@"ing"], @"Not specifying TUMessagePackReadingMutableLeaves should return a immutable string");
+	} options:0];
 }
 
 - (void)testStringAsData
@@ -215,8 +221,13 @@
     NSData *testString = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:self.class] pathForResource:@"Str32" ofType:@"txt"]];
     
     [self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:^(id result) {
-        XCTAssertTrue([result isKindOfClass:[NSMutableData class]], @"Returned data is not mutable when passing TUMessagePackReadingMutableLeaves.");
-    } options:TUMessagePackReadingStringsAsData | TUMessagePackReadingMutableLeaves];
+		XCTAssertNoThrow([result appendData:[@"test" dataUsingEncoding:NSUTF8StringEncoding]], @"TUMessagePackReadingMutableLeaves should return a mutable string");
+	} options:TUMessagePackReadingStringsAsData | TUMessagePackReadingMutableLeaves];
+	
+	// there seems to be a bug in NSData that allows you to mutate it, even if it isn't created as an NSMutableData
+//	[self _testReadingWithType:@"Str32" expectedValue:testString additionalTests:^(id result) {
+//		XCTAssertThrows([result appendData:[@"test" dataUsingEncoding:NSUTF8StringEncoding]], @"Not specifying TUMessagePackReadingMutableLeaves should return a immutable string");
+//	} options:TUMessagePackReadingStringsAsData];
 }
 
 
@@ -273,6 +284,18 @@
     [self _testReadingPerformanceWithType:@"Array32" expectedValue:testArray additionalTests:nil options:0];
 }
 
+- (void)testArrayMutableContainers
+{
+	[self _testReadingWithType:@"Fixarray" expectedValue:@[@1, @"b", @3.5] additionalTests:^(id result) {
+		XCTAssertNoThrow([result addObject:@1], @"TUMessagePackReadingMutableContainers should return a mutable array");
+	} options:TUMessagePackReadingMutableContainers];
+	
+	
+	[self _testReadingWithType:@"Fixarray" expectedValue:@[@1, @"b", @3.5] additionalTests:^(id result) {
+		XCTAssertThrows([result addObject:@1], @"Not specifying TUMessagePackReadingMutableContainers should return a immutable array");
+	} options:0];
+}
+
 
 #pragma mark - Map (Dictionary)
 
@@ -301,6 +324,18 @@
     [self _testReadingWithType:@"Map32" expectedValue:testMap];
     
     [self _testReadingPerformanceWithType:@"Map32" expectedValue:testMap additionalTests:nil options:0];
+}
+
+- (void)testMapMutableContainers
+{
+	[self _testReadingWithType:@"Fixmap" expectedValue:@{ @"key": @"value", @"one": @1, @"float": @2.8 } additionalTests:^(id result) {
+		XCTAssertNoThrow([result setObject:@1 forKey:@"setObject"], @"TUMessagePackReadingMutableContainers should return a mutable map");
+	} options:TUMessagePackReadingMutableContainers];
+	
+	
+	[self _testReadingWithType:@"Fixmap" expectedValue:@{ @"key": @"value", @"one": @1, @"float": @2.8 } additionalTests:^(id result) {
+		XCTAssertThrows([result setObject:@1 forKey:@"setObject"], @"Not specifying TUMessagePackReadingMutableContainers should return a immutable map");
+	} options:0];
 }
 
 

@@ -132,7 +132,7 @@ void TNKMPEncodeObject(TNKMPEncodeInfo *readingInfo, CFTypeRef object)
             } else if (length < pow(2, 2 * 8)) {
                 EncodeValue(TUMessagePackStr16, CFSwapInt16HostToBig(length));
             } else if (length < pow(2, 4 * 8)) {
-                EncodeValue(TUMessagePackStr32, CFSwapInt32HostToBig(length));
+                EncodeValue(TUMessagePackStr32, CFSwapInt32HostToBig((uint32_t)length));
             } else if (readingInfo->error == nil) {
                 readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackObjectTooBig, NULL);
             }
@@ -160,7 +160,7 @@ void TNKMPEncodeObject(TNKMPEncodeInfo *readingInfo, CFTypeRef object)
             } else if (dataLength < pow(2, 2 * 8)) {
                 EncodeValue(TUMessagePackBin16, CFSwapInt16HostToBig(dataLength));
             } else if (dataLength < pow(2, 4 * 8)) {
-                EncodeValue(TUMessagePackBin32, CFSwapInt32HostToBig(dataLength));
+                EncodeValue(TUMessagePackBin32, CFSwapInt32HostToBig((uint32_t)dataLength));
             } else if (readingInfo->error == nil) {
                 readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackObjectTooBig, NULL);
             }
@@ -175,7 +175,7 @@ void TNKMPEncodeObject(TNKMPEncodeInfo *readingInfo, CFTypeRef object)
         } else if (arrayLength < pow(2, 2 * 8)) {
             EncodeValue(TUMessagePackArray16, CFSwapInt16HostToBig(arrayLength));
         } else if (arrayLength < pow(2, 4 * 8)) {
-            EncodeValue(TUMessagePackArray32, CFSwapInt32HostToBig(arrayLength));
+            EncodeValue(TUMessagePackArray32, CFSwapInt32HostToBig((uint32_t)arrayLength));
         } else if (readingInfo->error == nil) {
             readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackObjectTooBig, NULL);
         }
@@ -189,7 +189,7 @@ void TNKMPEncodeObject(TNKMPEncodeInfo *readingInfo, CFTypeRef object)
         } else if (mapLength < pow(2, 2 * 8)) {
             EncodeValue(TUMessagePackMap16, CFSwapInt16HostToBig(mapLength));
         } else if (mapLength < pow(2, 4 * 8)) {
-            EncodeValue(TUMessagePackMap32, CFSwapInt32HostToBig(mapLength));
+            EncodeValue(TUMessagePackMap32, CFSwapInt32HostToBig((uint32_t)mapLength));
         } else if (readingInfo->error == nil) {
             readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackObjectTooBig, NULL);
         }
@@ -216,7 +216,7 @@ inline void TNKMPEncodeDataObjectAsString(TNKMPEncodeInfo *readingInfo, CFDataRe
     } else if (length < pow(2, 2 * 8)) {
         EncodeValue(TUMessagePackStr16, CFSwapInt16HostToBig(length));
     } else if (length < pow(2, 4 * 8)) {
-        EncodeValue(TUMessagePackStr32, CFSwapInt32HostToBig(length));
+        EncodeValue(TUMessagePackStr32, CFSwapInt32HostToBig((uint32_t)length));
     } else if (readingInfo->error == nil) {
         readingInfo->error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackObjectTooBig, NULL);
     }
