@@ -230,6 +230,20 @@
 //	} options:TUMessagePackReadingStringsAsData];
 }
 
+- (void)testAllowsFragments
+{
+	NSString *testType = @"Fixstr";
+	
+	NSData *example = [NSData dataWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:testType withExtension:@"msgpack"]];
+	
+	NSError *error = nil;
+	id result = [TUMessagePackSerialization messagePackObjectWithData:example options:0 error:&error];
+	
+	XCTAssertNotNil(error, @"No error reading without allow fragments");
+	XCTAssertEqual(error.code, TUMessagePackFragmentsNotAllowed);
+	XCTAssertNil(result, @"Object returned reading without allow fragments");
+}
+
 
 #pragma mark - Bin
 

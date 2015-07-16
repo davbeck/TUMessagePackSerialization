@@ -12,18 +12,13 @@
 #import "TUOrderedMap.h"
 
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, TUMessagePackReadingOptions) {
 	TUMessagePackReadingMutableContainers = (1UL << 0),
 	TUMessagePackReadingMutableLeaves = (1UL << 1),
 	TUMessagePackReadingAllowFragments = (1UL << 2),
 	TUMessagePackReadingStringsAsData = (1UL << 3),
 	TUMessagePackReadingNSNullAsNil = (1UL << 4),
-    TUMessagePackReadingLenient = (1UL << 5),
-    
-    // proposed
-    // TUMessagePackReadingLenient
-    // If we run out of data for an array or dictionary, return as much valid data as possible
-} TUMessagePackReadingOptions;
+};
 
 typedef enum : NSUInteger {
     TUMessagePackWritingCompatabilityMode = (1UL << 0),
@@ -31,12 +26,13 @@ typedef enum : NSUInteger {
 
 
 extern NSString *TUMessagePackErrorDomain;
-typedef enum : NSInteger {
-    TUMessagePackNoMatchingFormatCode,
-    TUMessagePackNotEnoughData,
-    TUMessagePackObjectTooBig,
-} TUMessagePackErrorCode;
 
+typedef NS_ENUM(NSUInteger, TUMessagePackErrorCode) {
+	TUMessagePackNoMatchingFormatCode,
+	TUMessagePackNotEnoughData,
+	TUMessagePackObjectTooBig,
+	TUMessagePackFragmentsNotAllowed,
+};
 
 typedef enum : uint8_t {
     TUMessagePackPositiveFixint = 0x00, // unused... it's special

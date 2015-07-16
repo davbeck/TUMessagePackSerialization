@@ -203,7 +203,7 @@
     
     NSError *error = nil;
     NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:(__bridge id)(utf16String) options:0 error:&error];
-    id object = [TUMessagePackSerialization messagePackObjectWithData:result options:0 error:&error];
+    id object = [TUMessagePackSerialization messagePackObjectWithData:result options:TUMessagePackReadingAllowFragments error:&error];
     
     XCTAssertNil(error, @"Error writting %@: %@", utf16String, error);
     

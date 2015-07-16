@@ -55,14 +55,21 @@ extern CFTypeRef TNKMPCreateObjectByDecodingData(CFDataRef data, TUMessagePackRe
     
     if (error != NULL && readingInfo.error != NULL) {
         *error = (CFErrorRef)CFAutorelease(readingInfo.error);
-    }
-    
+		return nil;
+	} else if ((readingInfo.options & TUMessagePackReadingAllowFragments) != TUMessagePackReadingAllowFragments) {
+		CFTypeID type = CFGetTypeID(object);
+		if (type != CFArrayGetTypeID() && type != CFDictionaryGetTypeID()) {
+			*error = CFErrorCreate(NULL, (CFStringRef)TUMessagePackErrorDomain, TUMessagePackFragmentsNotAllowed, nil);
+			return nil;
+		}
+	}
+	
     return object;
 }
 
 CFTypeRef TNKMPDecodeCreateObject(TUReadingInfo *readingInfo)
 {
-    TUMessagePackCode code = TNKMPDecodeUInt8(readingInfo);//[self _popInt8];
+    TUMessagePackCode code = TNKMPDecodeUInt8(readingInfo);
     
     switch (code) {
         // CFNumber doesn't support unsigned integers so we have to use the next biggest size
