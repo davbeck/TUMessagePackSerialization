@@ -1,9 +1,35 @@
-# TUMessagePackSerialization
+# TUMessagePackSerialization for Objective-C
 
 [![Version](http://cocoapod-badges.herokuapp.com/v/TUMessagePackSerialization/badge.png)](http://cocoadocs.org/docsets/TUMessagePackSerialization)
 [![Platform](http://cocoapod-badges.herokuapp.com/p/TUMessagePackSerialization/badge.png)](http://cocoadocs.org/docsets/TUMessagePackSerialization)
 
+[MessagePack: It's like JSON. but fast and small.](http://msgpack.org)
+
+MessagePack is an awesome format and alternative to JSON that stores data in binary instead of plain text. For many languages, including Objective-C, the format that is stored is nearly identical to the raw format that is used by the language to store the data in memory and use it. Because of this, it should be much faster to decode and encode because in many cases you are just doing a memory copy from one place to another.
+
+At least, that is the theory, when I started exploring using MessagePack on iOS, I found that the official ObjC library was actually *slower* than the built in `NSJSONSerialization`. In part, that is because Apple has done a really good job at optomizing their JSON parser, but I felt it should be faster. Here's some stats taken from various serialization options using samples of various api responses:
+
+![Serialization stats](http://davbeck.s3.amazonaws.com/TUMessagePackSerialization-Stats.svg)
+
+Note that I tried to get a comparison to [`plists`](https://en.wikipedia.org/wiki/Property_list), but they don't support `null`, which makes translating api results difficult. When I was able to get it to work, it was much slower than the other options.
+
 ## Usage
+
+### Encoding objects as MessagePack data
+
+```objc
+NSError *error = nil;
+NSData *result = [TUMessagePackSerialization dataWithMessagePackObject:value options:0 error:&error];
+```
+
+### Decoding MessagePack data as objects
+
+```objc
+NSError *error = nil;
+id result = [TUMessagePackSerialization messagePackObjectWithData:example options:0 error:&error];
+```
+
+----
 
 To run the tests project; clone the repo, and run `pod install` from the Project directory first.
 
